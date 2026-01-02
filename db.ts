@@ -66,6 +66,7 @@ export const db = {
     return localStorage.getItem(DB_KEYS.AUTH) === 'true';
   },
   login: (user: string, pass: string) => {
+    // Uso estándar de import.meta.env para Vite
     const envUser = (import.meta as any).env.VITE_ADMIN_USER || INITIAL_CONFIG.admin.username;
     const envPass = (import.meta as any).env.VITE_ADMIN_PASSWORD || INITIAL_CONFIG.admin.password;
     
