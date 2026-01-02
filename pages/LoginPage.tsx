@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, User, Activity, ArrowLeft, Loader2 } from 'lucide-react';
+import { Lock, User, Activity, ArrowLeft, Loader2, ShieldAlert } from 'lucide-react';
 import { db } from '../db';
 
 const LoginPage: React.FC = () => {
@@ -15,86 +15,99 @@ const LoginPage: React.FC = () => {
     setLoading(true);
     setError('');
 
-    // Simular latencia de red
     setTimeout(() => {
       const success = db.login(username, password);
       if (success) {
         navigate('/admin');
       } else {
-        setError('Acceso denegado: Credenciales inválidas');
+        setError('ACCESO DENEGADO: CREDENCIALES NO VÁLIDAS');
         setLoading(false);
       }
-    }, 1000);
+    }, 1500);
   };
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-black px-3"
-      style={{ background: 'radial-gradient(circle at center, #0B0F14 0%, #000 100%)' }}>
+    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-black px-3 position-relative overflow-hidden">
       
-      <div className="card card-futuristic w-100 shadow-2xl border-secondary border-opacity-20" style={{ maxWidth: '420px', background: 'rgba(17, 24, 39, 0.8)', backdropFilter: 'blur(10px)' }}>
+      {/* Background Decor */}
+      <div className="position-absolute bg-accent opacity-5 rounded-circle blur-3xl" style={{ width: '600px', height: '600px', top: '-20%', left: '-10%', filter: 'blur(150px)' }}></div>
+      <div className="position-absolute w-100 h-100 opacity-5" style={{ backgroundImage: 'linear-gradient(rgba(0,255,136,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,136,0.2) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+
+      <div className="card-futuristic w-100 border-accent border-opacity-20 shadow-lg" style={{ maxWidth: '440px', background: 'rgba(22, 27, 34, 0.95)' }}>
         <div className="card-body p-5">
           <div className="text-center mb-5">
-            <div className="d-inline-flex p-3 rounded-circle mb-3 shadow" style={{ background: 'rgba(0, 255, 136, 0.1)', border: '1px solid rgba(0, 255, 136, 0.2)' }}>
-              <Activity size={40} className="text-accent" />
+            <div className="d-inline-flex p-4 rounded-circle mb-4 border-accent-soft shadow-inner">
+              <Activity size={48} className="text-accent" />
             </div>
-            <h1 className="h3 fw-black font-orbitron text-white m-0">CORE AUTH</h1>
-            <p className="text-muted small mt-2 letter-spacing-1">SISTEMA DE GESTIÓN CENTRAL</p>
+            <h1 className="h2 fw-black font-orbitron text-white m-0 tracking-tighter">SISTEMA ADMIN</h1>
+            <p className="text-muted small mt-2 fw-bold font-orbitron tracking-widest opacity-60">INGRESO DE PERSONAL AUTORIZADO</p>
           </div>
 
           <form onSubmit={handleLogin}>
-            <div className="mb-3">
-              <label className="form-label text-muted small fw-bold">OPERADOR</label>
+            <div className="mb-4">
+              <label className="form-label text-accent small fw-black font-orbitron mb-2 tracking-widest">ID USUARIO</label>
               <div className="input-group">
-                <span className="input-group-text bg-transparent border-secondary border-opacity-25 text-muted">
+                <span className="input-group-text bg-black border-white border-opacity-10 text-muted">
                   <User size={18} />
                 </span>
                 <input
                   type="text"
-                  className="form-control bg-transparent border-secondary border-opacity-25 text-white"
+                  className="form-control bg-black border-white border-opacity-10 text-white font-orbitron px-3 py-3"
+                  style={{ fontSize: '0.8rem' }}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="ID Operador"
+                  placeholder="USERNAME"
                   required
                 />
               </div>
             </div>
 
-            <div className="mb-4">
-              <label className="form-label text-muted small fw-bold">PASSWORD</label>
+            <div className="mb-5">
+              <label className="form-label text-accent small fw-black font-orbitron mb-2 tracking-widest">CLAVE DE ACCESO</label>
               <div className="input-group">
-                <span className="input-group-text bg-transparent border-secondary border-opacity-25 text-muted">
+                <span className="input-group-text bg-black border-white border-opacity-10 text-muted">
                   <Lock size={18} />
                 </span>
                 <input
                   type="password"
-                  className="form-control bg-transparent border-secondary border-opacity-25 text-white"
+                  className="form-control bg-black border-white border-opacity-10 text-white font-orbitron px-3 py-3"
+                  style={{ fontSize: '0.8rem' }}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="PASSWORD"
                   required
                 />
               </div>
             </div>
 
             {error && (
-              <div className="alert alert-danger py-2 small border-0 bg-danger bg-opacity-10 text-danger text-center mb-4 font-orbitron" style={{ fontSize: '0.7rem' }}>
-                {error.toUpperCase()}
+              <div className="alert bg-danger bg-opacity-10 border border-danger border-opacity-20 text-danger text-center mb-4 py-3 d-flex align-items-center justify-content-center gap-2 font-orbitron" style={{ fontSize: '0.7rem' }}>
+                <ShieldAlert size={16} /> {error}
               </div>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary-custom w-100 py-3 rounded-2 mb-4 d-flex align-items-center justify-content-center gap-2 font-orbitron"
+              className="btn btn-primary-custom w-100 py-4 rounded-3 mb-4 d-flex align-items-center justify-content-center gap-3 fs-5"
             >
-              {loading ? <Loader2 size={18} className="spinner-border spinner-border-sm" /> : 'ACCEDER AL PANEL'}
+              {loading ? (
+                <>
+                  <Loader2 size={24} className="spinner-border spinner-border-sm" /> 
+                  <span className="ms-2">AUTENTICANDO...</span>
+                </>
+              ) : 'INICIAR SESIÓN'}
             </button>
           </form>
 
-          <button onClick={() => navigate('/')} className="btn btn-link text-muted text-decoration-none w-100 small d-flex align-items-center justify-content-center gap-2 hover-accent transition-all">
-            <ArrowLeft size={14} /> VOLVER AL SITIO PÚBLICO
+          <button onClick={() => navigate('/')} className="btn btn-link text-muted text-decoration-none w-100 small d-flex align-items-center justify-content-center gap-2 hover-accent transition-all font-orbitron" style={{ fontSize: '0.7rem' }}>
+            <ArrowLeft size={14} /> VOLVER AL PORTAL PÚBLICO
           </button>
         </div>
+      </div>
+
+      <div className="position-absolute bottom-0 w-100 p-4 text-center opacity-30">
+        <p className="text-white small m-0 font-orbitron" style={{ fontSize: '0.6rem', letterSpacing: '4px' }}>ENCRYPTED END-TO-END • PROTECTED BY ELITE SECURE</p>
       </div>
     </div>
   );
