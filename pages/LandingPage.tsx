@@ -1,198 +1,174 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  MessageCircle, 
-  ShoppingCart,
-  ChevronDown,
-  Truck,
-  ShieldCheck,
-  Zap,
-  Activity,
-  ArrowRight,
-  TrendingUp,
-  Award
+  Truck, 
+  ShieldCheck, 
+  Zap, 
+  ArrowRight, 
+  TrendingUp, 
+  Award,
+  Target,
+  Clock,
+  ExternalLink as ExtIcon,
+  ShoppingBag
 } from 'lucide-react';
 import { db } from '../db';
-import { Combo } from '../types';
+import { Combo, ExternalLink } from '../types';
 
 const LandingPage: React.FC = () => {
   const [combos, setCombos] = useState<Combo[]>([]);
+  const [links, setLinks] = useState<ExternalLink[]>([]);
   const config = db.getConfig();
 
   useEffect(() => {
     setCombos(db.getCombos(true));
+    setLinks(db.getLinks(true));
   }, []);
 
   const openWhatsApp = (comboName?: string) => {
     const phone = config.brand.whatsapp;
     const message = comboName
-      ? `¡Hola! Me interesa potenciar mi rendimiento con el ${comboName}. ¿Me das más info?`
-      : `¡Hola! Quisiera recibir asesoramiento experto sobre mi suplementación.`;
+      ? `¡Hola! Me interesa el ${comboName}. ¿Me darías más info?`
+      : `¡Hola! Quisiera recibir asesoramiento sobre suplementación.`;
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
 
+  const getIcon = (iconName: string) => {
+    const icons: any = { Truck, ShieldCheck, Zap, Target, Award, Clock };
+    const Icon = icons[iconName] || Zap;
+    return <Icon className="text-accent" size={36} strokeWidth={2.5} />;
+  };
+
   return (
-    <div className="container-fluid p-0 bg-black overflow-hidden">
-      {/* Dynamic Header / Navbar */}
+    <div className="bg-black text-white min-vh-100">
+      {/* Dynamic Navbar */}
       <nav className="fixed-top px-4 py-3 bg-blur border-bottom border-white border-opacity-5 z-index-1050">
         <div className="container d-flex justify-content-between align-items-center">
-          <div className="brand-title h4 m-0">{config.brand.name}</div>
-          <button onClick={() => openWhatsApp()} className="btn btn-sm btn-premium py-2 px-4 d-none d-md-flex">
-            ASESORAMIENTO 
+          <motion.div 
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            className="font-orbitron fw-black h4 m-0 tracking-tighter"
+          >
+            <span className="text-accent">ELITE</span> TUC
+          </motion.div>
+          <div className="d-none d-lg-flex gap-5">
+            {['productos', 'beneficios', 'comunidad'].map((item) => (
+              <a key={item} href={`#${item}`} className="text-decoration-none text-white small fw-black text-uppercase tracking-widest hover-accent transition-all">{item}</a>
+            ))}
+          </div>
+          <button onClick={() => openWhatsApp()} className="btn btn-action py-2 px-4 d-none d-sm-flex">
+            SOPORTE EN VIVO
           </button>
         </div>
       </nav>
 
-      {/* Hero High-Impact */}
-      <section className="min-vh-100 d-flex align-items-center justify-content-center position-relative pt-5">
-        <div className="position-absolute w-100 h-100 opacity-20" 
-          style={{ 
-            backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(0, 255, 136, 0.15) 1px, transparent 0)',
-            backgroundSize: '40px 40px'
-          }}>
-        </div>
-        
-        <div className="position-absolute bg-accent opacity-5 rounded-circle blur-3xl" style={{ width: '600px', height: '600px', top: '10%', right: '-10%', filter: 'blur(150px)' }}></div>
-        <div className="position-absolute bg-cyan opacity-5 rounded-circle blur-3xl" style={{ width: '600px', height: '600px', bottom: '10%', left: '-10%', filter: 'blur(150px)' }}></div>
-
-        <div className="container position-relative z-1 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="d-inline-flex align-items-center gap-2 mb-4 px-4 py-2 border border-accent border-opacity-20 rounded-pill text-accent fw-bold font-orbitron bg-black bg-opacity-40"
-            style={{ fontSize: '0.75rem', letterSpacing: '3px' }}
-          >
-            <Award size={16} /> PERFORMANCE DE ÉLITE
-          </motion.div>
-          
-          <motion.h1 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="display-1 fw-black brand-title mb-4"
-            style={{ fontSize: 'clamp(3.5rem, 12vw, 7rem)', lineHeight: 0.85 }}
-          >
-            DOMINA TU<br/>POTENCIAL
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="lead text-muted mb-5 mx-auto fs-4 fw-light" style={{ maxWidth: '800px' }}>
-            {config.brand.tagline}
-          </motion.p>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="d-flex flex-column flex-sm-row gap-4 justify-content-center align-items-center pt-3"
-          >
-            <button onClick={() => openWhatsApp()} className="btn btn-premium btn-lg px-5 shadow-lg">
-              <MessageCircle size={22} /> HABLAR CON EXPERTO
-            </button>
-            <a href="#combos" className="btn btn-outline-premium btn-lg px-5">
-              EXPLORAR COMBOS <ArrowRight size={20} className="ms-2" />
-            </a>
-          </motion.div>
-        </div>
-
-        <motion.div 
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2.5 }}
-          className="position-absolute bottom-0 start-50 translate-middle-x mb-5 text-accent opacity-30">
-          <ChevronDown size={40} />
-        </motion.div>
-      </section>
-
-      {/* Stats / Proof Section */}
-      <section className="py-5 bg-black border-top border-bottom border-white border-opacity-5">
-        <div className="container">
-          <div className="row g-4 text-center">
-            <div className="col-6 col-md-3">
-              <h3 className="h1 fw-black font-orbitron text-accent m-0 tracking-tighter">+10K</h3>
-              <p className="text-muted small text-uppercase fw-bold m-0 mt-2">Clientes</p>
-            </div>
-            <div className="col-6 col-md-3">
-              <h3 className="h1 fw-black font-orbitron text-cyan m-0 tracking-tighter">24H</h3>
-              <p className="text-muted small text-uppercase fw-bold m-0 mt-2">Entrega</p>
-            </div>
-            <div className="col-6 col-md-3">
-              <h3 className="h1 fw-black font-orbitron text-accent m-0 tracking-tighter">100%</h3>
-              <p className="text-muted small text-uppercase fw-bold m-0 mt-2">Original</p>
-            </div>
-            <div className="col-6 col-md-3">
-              <h3 className="h1 fw-black font-orbitron text-cyan m-0 tracking-tighter">+50</h3>
-              <p className="text-muted small text-uppercase fw-bold m-0 mt-2">Combos</p>
+      {/* Hero Section Brutalista */}
+      <section className="min-vh-100 d-flex align-items-center position-relative pt-5 overflow-hidden">
+        <div className="container position-relative z-2">
+          <div className="row">
+            <div className="col-xl-10">
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="d-inline-block px-3 py-1 bg-accent text-black fw-black x-small mb-4 text-uppercase tracking-widest">
+                  ESTÁNDAR DE COMPETICIÓN 2024
+                </div>
+                <h1 className="title-massive mb-4" style={{ fontSize: 'clamp(3.5rem, 12vw, 10rem)' }}>
+                  HARDCORE <br />
+                  <span className="text-accent">PERFORMANCE</span> <br />
+                  FUEL
+                </h1>
+                <p className="lead text-secondary mb-5 fs-4 fw-light" style={{ maxWidth: '750px', lineHeight: '1.2' }}>
+                  {config.brand.tagline}. No vendemos suplementos, proveemos el combustible para tu evolución física definitiva.
+                </p>
+                <div className="d-flex flex-wrap gap-4">
+                  <button onClick={() => openWhatsApp()} className="btn btn-action btn-lg px-5 py-4">
+                    PEDIR POR WHATSAPP <ArrowRight size={22} />
+                  </button>
+                  <a href="#productos" className="btn btn-outline-brand btn-lg px-5 py-4">
+                    CATÁLOGO COMPLETO
+                  </a>
+                </div>
+              </motion.div>
             </div>
           </div>
         </div>
+        
+        {/* Background Graphic Decor */}
+        <div className="position-absolute bottom-0 end-0 p-5 opacity-5 d-none d-lg-block pointer-events-none">
+          <div className="font-orbitron fw-black text-white" style={{ fontSize: '25rem', lineHeight: '0.7' }}>2024</div>
+        </div>
       </section>
 
-      {/* Combos Grid */}
-      <section id="combos" className="py-5 my-5 container-fluid px-lg-5">
-        <div className="text-center mb-5 pb-5">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="d-flex flex-column align-items-center"
-          >
-            <span className="text-accent font-orbitron fw-black tracking-widest small mb-3">CATÁLOGO SELECCIONADO</span>
-            <h2 className="display-4 font-orbitron fw-black text-white m-0">SISTEMAS DE <span className="text-cyan">PAGO</span></h2>
-            <div className="mt-3 bg-accent" style={{ width: '60px', height: '4px', borderRadius: '10px' }}></div>
-          </motion.div>
+      {/* Marquee Categorías Infinito */}
+      <div className="bg-accent py-4 overflow-hidden border-top border-bottom border-black position-relative z-3">
+        <div className="marquee-wrapper">
+          <div className="marquee-content d-flex">
+            {[1,2,3,4,5,6].map(i => (
+              <div key={i} className="d-flex align-items-center gap-5 px-4">
+                <span className="text-black fw-black font-orbitron h4 m-0 text-nowrap">PROTEÍNAS ELITE</span>
+                <span className="text-black fw-black font-orbitron h4 m-0 text-nowrap">•</span>
+                <span className="text-black fw-black font-orbitron h4 m-0 text-nowrap">CREATINAS PURAS</span>
+                <span className="text-black fw-black font-orbitron h4 m-0 text-nowrap">•</span>
+                <span className="text-black fw-black font-orbitron h4 m-0 text-nowrap">PRE-ENTRENO TECH</span>
+                <span className="text-black fw-black font-orbitron h4 m-0 text-nowrap">•</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Secciones de Combos */}
+      <section id="productos" className="py-8 container">
+        <div className="mb-6">
+          <h2 className="title-massive text-white h1 mb-0">SISTEMAS DE <span className="text-accent">FUERZA</span></h2>
+          <div className="separator-brand"></div>
+          <p className="text-secondary fs-5" style={{ maxWidth: '600px' }}>Selección premium de packs diseñados para maximizar la hipertrofia y la resistencia.</p>
         </div>
 
-        <div className="row g-5 px-lg-4">
+        <div className="row g-5">
           {combos.map((combo) => (
-            <div key={combo.id} className="col-12 col-md-6 col-xl-4">
+            <div key={combo.id} className="col-12 col-md-6 col-lg-4">
               <motion.div 
-                whileHover={{ y: -10 }}
-                className="card-premium h-100"
+                whileHover={{ scale: 1.02 }}
+                className="card-admin h-100 d-flex flex-column"
               >
-                <div className="position-relative" style={{ height: '320px' }}>
-                  <img src={combo.image} className="h-100 w-100 object-fit-cover" alt={combo.name} />
-                  <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: 'linear-gradient(rgba(11, 15, 20, 0.1), rgba(11, 15, 20, 0.9))' }}></div>
-                  
+                <div className="position-relative overflow-hidden" style={{ height: '350px' }}>
+                  <img src={combo.image} className="w-100 h-100 object-fit-cover" alt={combo.name} />
                   {combo.discount && (
-                    <div className="position-absolute top-0 end-0 m-4">
-                       <span className="badge bg-accent text-black fw-black px-4 py-2 rounded-pill font-orbitron shadow-lg" style={{ fontSize: '0.7rem' }}>
-                        {combo.discount}
-                      </span>
+                    <div className="position-absolute top-0 end-0 m-3 bg-accent text-black fw-black px-3 py-1 x-small z-2">
+                      {combo.discount}
                     </div>
                   )}
-                  
-                  <div className="position-absolute bottom-0 start-0 p-4">
-                     <h3 className="h2 fw-black text-white font-orbitron tracking-tighter m-0">{combo.name.toUpperCase()}</h3>
+                  <div className="position-absolute bottom-0 start-0 w-100 p-4 bg-gradient-dark">
+                    <h3 className="h3 fw-black m-0 text-uppercase tracking-tighter">{combo.name}</h3>
                   </div>
                 </div>
                 
-                <div className="card-body p-4 p-lg-5 d-flex flex-column">
-                  <p className="text-muted mb-4 flex-grow-1" style={{ fontSize: '1.1rem', lineHeight: '1.6' }}>{combo.description}</p>
+                <div className="p-4 d-flex flex-column flex-grow-1">
+                  <p className="text-secondary mb-4 small flex-grow-1" style={{ color: '#888' }}>{combo.description}</p>
                   
-                  <div className="mb-5 py-3 border-top border-bottom border-white border-opacity-5">
+                  <div className="mb-4">
                     {combo.items.map((item, idx) => (
-                      <div key={idx} className="d-flex align-items-center gap-3 mb-2 text-white text-opacity-80">
-                        <TrendingUp size={16} className="text-cyan" />
-                        <span className="small fw-medium">{item}</span>
+                      <div key={idx} className="d-flex align-items-center gap-3 mb-2 text-white small">
+                        <div className="bg-accent" style={{ width: '8px', height: '2px' }}></div>
+                        <span className="fw-bold opacity-80">{item}</span>
                       </div>
                     ))}
                   </div>
 
-                  <div className="d-flex align-items-end justify-content-between mb-4">
+                  <div className="d-flex align-items-center justify-content-between pt-4 border-top border-white border-opacity-10">
                     <div>
-                      <p className="text-muted small fw-black font-orbitron mb-1 tracking-widest">INVERSIÓN TOTAL</p>
-                      <span className="display-6 fw-black text-accent font-orbitron m-0 glow-text">
-                        ${combo.price.toLocaleString('es-AR')}
-                      </span>
+                      <span className="text-accent x-small d-block mb-1 font-orbitron fw-bold">VALOR PACK</span>
+                      <span className="h2 fw-black font-orbitron">${combo.price.toLocaleString('es-AR')}</span>
                     </div>
+                    <button onClick={() => openWhatsApp(combo.name)} className="btn btn-action p-3">
+                      <ShoppingBag size={20} />
+                    </button>
                   </div>
-
-                  <button onClick={() => openWhatsApp(combo.name)} className="btn btn-premium w-100 py-4 fs-5">
-                    <ShoppingCart size={22} /> RESERVAR AHORA
-                  </button>
                 </div>
               </motion.div>
             </div>
@@ -200,54 +176,65 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Trust / Brand Pillars */}
-      <section className="py-5 bg-glass mb-5">
-        <div className="container py-5">
+      {/* Beneficios Elite */}
+      <section id="beneficios" className="py-8 bg-surface border-top border-bottom border-white border-opacity-5">
+        <div className="container">
           <div className="row g-5">
-            <div className="col-md-4 text-center">
-              <div className="p-4 bg-accent bg-opacity-5 border border-accent border-opacity-10 rounded-4 mb-4 d-inline-block">
-                <ShieldCheck size={48} className="text-accent" />
+            {config.benefits.map((benefit, idx) => (
+              <div key={idx} className="col-md-6 col-lg-4">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="p-5 border border-white border-opacity-5 h-100 hover-border-accent transition-all"
+                >
+                  <div className="mb-4">{getIcon(benefit.icon)}</div>
+                  <h4 className="fw-black text-white text-uppercase h5 mb-3 tracking-widest">{benefit.title}</h4>
+                  <p className="text-secondary small m-0 leading-relaxed" style={{ opacity: 0.7 }}>{benefit.description}</p>
+                </motion.div>
               </div>
-              <h4 className="font-orbitron fw-black text-white mb-3">CALIDAD LAB</h4>
-              <p className="text-muted">Todos nuestros productos están testeados bajo estándares internacionales de pureza.</p>
-            </div>
-            <div className="col-md-4 text-center">
-              <div className="p-4 bg-cyan bg-opacity-5 border border-cyan border-opacity-10 rounded-4 mb-4 d-inline-block">
-                <Zap size={48} className="text-cyan" />
-              </div>
-              <h4 className="font-orbitron fw-black text-white mb-3">BIO-DISPONIBLE</h4>
-              <p className="text-muted">Fórmulas optimizadas para una absorción inmediata y máximo impacto metabólico.</p>
-            </div>
-            <div className="col-md-4 text-center">
-              <div className="p-4 bg-accent bg-opacity-5 border border-accent border-opacity-10 rounded-4 mb-4 d-inline-block">
-                <Truck size={48} className="text-accent" />
-              </div>
-              <h4 className="font-orbitron fw-black text-white mb-3">SPEED LOGISTICS</h4>
-              <p className="text-muted">Red de distribución prioritaria para que nunca interrumpas tu proceso.</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Footer Branding Heavy */}
-      <footer className="py-6 mt-5 bg-black border-top border-white border-opacity-5">
-        <div className="container">
-          <div className="row align-items-center text-center text-md-start">
-            <div className="col-md-6 mb-5 mb-md-0">
-              <div className="brand-title h2 mb-2">{config.brand.name}</div>
-              <p className="text-muted small fw-bold font-orbitron tracking-widest m-0 opacity-50">SUPLEMENTACIÓN DE RENDIMIENTO SUPERIOR</p>
-            </div>
-            <div className="col-md-6 text-md-end">
-              <div className="d-flex justify-content-center justify-content-md-end gap-4 mb-4">
-                <Activity className="text-accent" size={24} />
-                <Award className="text-cyan" size={24} />
-                <Zap className="text-accent" size={24} />
+      {/* Footer Heavy Branding */}
+      <footer className="py-8 bg-black border-top border-accent">
+        <div className="container text-center text-lg-start">
+          <div className="row g-5 align-items-center">
+            <div className="col-lg-6">
+              <div className="font-orbitron fw-black h1 m-0 text-white tracking-tighter">
+                ELITE <span className="text-accent">TUC</span>
               </div>
-              <p className="text-muted small m-0 opacity-30">© {new Date().getFullYear()} TUCUMÁN PERFORMANCE DIV. PROTEGIDO POR PROTOCOLO ELITE.</p>
+              <p className="text-secondary x-small mt-3 m-0 opacity-40 uppercase tracking-widest leading-lg">
+                © {new Date().getFullYear()} SUPLEMENTOS NOROESTE TUCUMÁN. <br />
+                SISTEMA OPERATIVO DE NUTRICIÓN DEPORTIVA.
+              </p>
+            </div>
+            <div className="col-lg-6">
+              <div className="d-flex justify-content-center justify-content-lg-end gap-3 flex-wrap">
+                <button onClick={() => openWhatsApp()} className="btn btn-outline-brand px-5">WHATSAPP</button>
+                <a href="/admin/login" className="btn btn-action px-5">ADMIN_CONSOLE</a>
+              </div>
             </div>
           </div>
         </div>
       </footer>
+
+      <style>{`
+        .py-8 { padding-top: 8rem; padding-bottom: 8rem; }
+        .x-small { font-size: 0.65rem; font-weight: 900; letter-spacing: 2.5px; }
+        .bg-gradient-dark { background: linear-gradient(transparent, rgba(0,0,0,0.95)); }
+        .hover-accent:hover { color: var(--accent) !important; }
+        .hover-border-accent:hover { border-color: var(--accent) !important; }
+        
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .marquee-wrapper { width: 100%; overflow: hidden; }
+        .marquee-content { width: fit-content; animation: marquee 30s linear infinite; }
+      `}</style>
     </div>
   );
 };
