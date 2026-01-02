@@ -8,116 +8,127 @@
     <style>
       :root {
         --bg-main: #0B0F14;
-        --bg-card: #111827;
-        --bg-glass: rgba(17, 24, 39, 0.7);
+        --bg-surface: #161B22;
+        --bg-glass: rgba(22, 27, 34, 0.8);
         --accent: #00FF88;
-        --accent-alt: #22D3EE;
-        --accent-gradient: linear-gradient(135deg, #00FF88 0%, #22D3EE 100%);
-        --text-main: #F3F4F6;
-        --text-muted: #9CA3AF;
-        --border-glass: rgba(255, 255, 255, 0.08);
+        --accent-hover: #00E67A;
+        --accent-soft: rgba(0, 255, 136, 0.1);
+        --text-primary: #F3F4F6;
+        --text-secondary: #9CA3AF;
+        --border-color: rgba(255, 255, 255, 0.08);
+        --shadow-pro: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
       }
       
       body { 
         font-family: 'Inter', sans-serif;
         background-color: var(--bg-main);
-        color: var(--text-main);
+        color: var(--text-primary);
         margin: 0;
-        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
       }
 
       .font-orbitron { font-family: 'Orbitron', sans-serif; }
       
-      /* --- Tipografía --- */
-      .brand-title {
-        font-family: 'Orbitron', sans-serif;
-        font-weight: 900;
-        letter-spacing: -2px;
-        background: var(--accent-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.3));
-      }
-
-      /* --- Botones --- */
-      .btn-premium { 
-        background: var(--accent-gradient); 
+      /* Botones Profesionales */
+      .btn-action { 
+        background-color: var(--accent); 
         color: #000; 
-        font-weight: 800;
-        border: none;
-        letter-spacing: 1px;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        text-transform: uppercase;
-        font-family: 'Orbitron', sans-serif;
-        padding: 1rem 2rem;
-        border-radius: 50px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-      }
-      .btn-premium:hover { 
-        transform: translateY(-4px) scale(1.02);
-        box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
-      }
-
-      .btn-outline-premium {
-        border: 2px solid var(--accent-alt);
-        color: var(--text-main);
-        background: transparent;
         font-weight: 700;
-        transition: all 0.3s ease;
-        padding: 1rem 2rem;
-        border-radius: 50px;
-        font-family: 'Orbitron', sans-serif;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
       }
-      .btn-outline-premium:hover {
-        background: rgba(34, 211, 238, 0.1);
-        border-color: var(--accent);
-        text-shadow: 0 0 5px var(--accent);
+      .btn-action:hover { 
+        background-color: var(--accent-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px var(--accent-soft);
+      }
+      .btn-action:active { transform: translateY(0); }
+
+      /* Cards de Admin */
+      .card-admin {
+        background-color: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        box-shadow: var(--shadow-pro);
       }
 
-      /* --- Cards --- */
-      .card-premium {
-        background: var(--bg-card);
-        border: 1px solid var(--border-glass);
-        border-radius: 1.5rem;
-        transition: all 0.5s ease;
-        overflow: hidden;
-        backdrop-filter: blur(10px);
+      /* Inputs Elegantes */
+      .form-control-pro {
+        background-color: #0D1117;
+        border: 1px solid var(--border-color);
+        color: white;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        transition: border-color 0.2s ease;
       }
-      .card-premium:hover {
+      .form-control-pro:focus {
+        background-color: #0D1117;
         border-color: var(--accent);
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        color: white;
+        box-shadow: 0 0 0 2px var(--accent-soft);
+        outline: none;
       }
 
-      /* --- Glow Utils --- */
-      .glow-text { text-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
-      .bg-blur { backdrop-filter: blur(15px); }
+      .text-accent { color: var(--accent) !important; }
+      .bg-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
       
+      /* Scrollbar */
       ::-webkit-scrollbar { width: 6px; }
       ::-webkit-scrollbar-track { background: var(--bg-main); }
       ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
       ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+      .sidebar-link {
+        color: var(--text-secondary);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 500;
+      }
+      .sidebar-link:hover {
+        background: rgba(255, 255, 255, 0.03);
+        color: white;
+      }
+      .sidebar-link.active {
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+
+      /* Responsive Utils */
+      @media (max-width: 991px) {
+        .desktop-only { display: none !important; }
+      }
+      @media (min-width: 992px) {
+        .mobile-only { display: none !important; }
+      }
     </style>
 <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "bootstrap/": "https://esm.sh/bootstrap@^5.3.8/",
+    "react": "https://esm.sh/react@^18.3.1",
+    "react-dom": "https://esm.sh/react-dom@^18.3.1",
+    "react-router-dom": "https://esm.sh/react-router-dom@^6.26.1",
+    "lucide-react": "https://esm.sh/lucide-react@^0.436.0",
+    "framer-motion": "https://esm.sh/framer-motion@^11.3.31",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
-    "framer-motion": "https://esm.sh/framer-motion@^12.23.26",
+    "bootstrap/": "https://esm.sh/bootstrap@^5.3.8/",
     "react/": "https://esm.sh/react@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
     "vite": "https://esm.sh/vite@^7.3.0",
     "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
   }
 }
 </script>
 </head>
-<body class="antialiased">
+<body>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
 </body>
