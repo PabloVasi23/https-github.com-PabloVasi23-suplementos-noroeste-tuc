@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
@@ -8,9 +8,11 @@ import ComboAdmin from './pages/ComboAdmin';
 import LinkAdmin from './pages/LinkAdmin';
 import { db } from './db';
 
-// Fixed: Made children optional to resolve the 'Property children is missing in type {}' error at usage sites.
+// Fix: Making children optional in the type definition of ProtectedRoute to prevent TypeScript errors 
+// when the component is used in JSX with children but the type system doesn't correctly map them to required props.
 const ProtectedRoute = ({ children }: { children?: React.ReactNode }) => {
-  if (!db.isLoggedIn()) {
+  const loggedIn = db.isLoggedIn();
+  if (!loggedIn) {
     return <Navigate to="/admin/login" replace />;
   }
   return <>{children}</>;
@@ -28,8 +30,6 @@ const App: React.FC = () => {
             <Dashboard />
           </ProtectedRoute>
         } />
-        
-        <Route path="/admin/dashboard" element={<Navigate to="/admin" replace />} />
         
         <Route path="/admin/combos" element={
           <ProtectedRoute>
