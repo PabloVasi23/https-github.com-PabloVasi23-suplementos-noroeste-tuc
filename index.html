@@ -7,28 +7,58 @@
     <title>SuplementosNoroesteTuc | Elite Performance</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-      body { background-color: #050505; color: #f5f5f5; margin: 0; padding: 0; }
+      :root {
+        --bs-body-bg: #050505;
+        --bs-body-color: #f5f5f5;
+        --primary-color: #DFFF00;
+      }
+      body { 
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bs-body-bg);
+        color: var(--bs-body-color);
+      }
+      .font-orbitron { font-family: 'Orbitron', sans-serif; }
+      .text-primary-custom { color: var(--primary-color) !important; }
+      .bg-primary-custom { background-color: var(--primary-color) !important; color: #000 !important; }
+      .btn-primary-custom { 
+        background-color: var(--primary-color); 
+        color: #000; 
+        font-weight: 700;
+        border: none;
+        transition: all 0.3s ease;
+      }
+      .btn-primary-custom:hover { 
+        background-color: #ccff00; 
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(223, 255, 0, 0.4);
+      }
+      .card-dark {
+        background-color: #121212;
+        border: 1px solid #222;
+        border-radius: 1rem;
+      }
       ::-webkit-scrollbar { width: 8px; }
       ::-webkit-scrollbar-track { background: #050505; }
       ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
-      ::-webkit-scrollbar-thumb:hover { background: #DFFF00; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }
     </style>
 <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@^19.2.3",
-    "react/": "https://esm.sh/react@^19.2.3/",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "vite": "https://esm.sh/vite@^7.3.0",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "react/": "https://esm.sh/react@^19.2.3/",
     "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
+    "vite": "https://esm.sh/vite@^7.3.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
     "framer-motion": "https://esm.sh/framer-motion@^12.23.26",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "bootstrap/": "https://esm.sh/bootstrap@^5.3.8/"
   }
 }
 </script>
 </head>
-<body class="antialiased">
+<body>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
 </body>

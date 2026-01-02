@@ -2,28 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  ArrowRight, 
   MessageCircle, 
   Sparkles, 
-  Package, 
-  ShieldCheck, 
-  Truck, 
-  Users, 
-  Target, 
-  Award, 
-  Clock, 
   Star, 
   Zap, 
   ExternalLink, 
   ShoppingCart,
-  ChevronDown
+  ChevronDown,
+  Truck,
+  ShieldCheck,
+  Clock
 } from 'lucide-react';
 import { db } from '../db';
 import { Combo, ExternalLink as ExtLink } from '../types';
-
-const IconMap: any = {
-  Users, Truck, Target, Award, ShieldCheck, Clock, Sparkles, Package, Star, Zap, ExternalLink, ShoppingCart
-};
 
 const LandingPage: React.FC = () => {
   const [combos, setCombos] = useState<Combo[]>([]);
@@ -36,238 +27,155 @@ const LandingPage: React.FC = () => {
   }, []);
 
   const openWhatsApp = (comboName?: string) => {
+    // Fix: Accessing environment variables via process.env instead of import.meta.env to resolve TypeScript errors
+    const phone = process.env.VITE_WHATSAPP_NUMBER || config.brand.whatsapp;
     const message = comboName
       ? `Hola, quiero pedir el Combo ${comboName} que vi en SuplementosNoroesteTuc`
       : `Hola, quiero hacer una consulta desde la web de SuplementosNoroesteTuc`;
-    const url = `https://wa.me/${config.brand.whatsapp}?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
 
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
-
   return (
-    <div className="min-h-screen bg-dark-bg text-white selection:bg-primary selection:text-black">
-      {/* Hero */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden px-4">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.1),transparent_70%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)]" />
-
-        <motion.div 
-          className="relative z-10 max-w-5xl mx-auto text-center"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          transition={{ staggerChildren: 0.1 }}
-        >
-          <motion.div variants={fadeInUp} className="mb-6 inline-flex items-center gap-2 px-4 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="w-4 h-4" />
-            Suplementos de Calidad en Tucumán
-          </motion.div>
-          <motion.h1 variants={fadeInUp} className="text-6xl md:text-8xl font-orbitron font-bold mb-6 bg-gradient-to-r from-white via-primary to-emerald-200 bg-clip-text text-transparent">
-            {config.brand.name}
-          </motion.h1>
-          <motion.p variants={fadeInUp} className="text-xl md:text-2xl text-dark-muted mb-8 max-w-2xl mx-auto font-light">
+    <div className="container-fluid p-0 overflow-hidden">
+      {/* Hero Section */}
+      <section className="min-vh-100 d-flex align-items-center justify-content-center position-relative px-3 text-center" style={{ background: 'radial-gradient(circle at center, #10b98115 0%, transparent 70%)' }}>
+        <div className="position-absolute w-100 h-100 top-0 start-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '50px 50px' }}></div>
+        
+        <div className="position-relative z-1">
+          <span className="badge rounded-pill bg-primary-custom px-3 py-2 mb-4 d-inline-flex align-items-center gap-2 text-uppercase fw-bold" style={{ fontSize: '0.7rem' }}>
+            <Sparkles size={14} /> Suplementos de Calidad en Tucumán
+          </span>
+          <h1 className="display-1 fw-black font-orbitron mb-3 text-white">
+            {config.brand.name.toUpperCase()}
+          </h1>
+          <p className="lead text-secondary mb-5 mx-auto" style={{ maxWidth: '600px' }}>
             {config.brand.tagline}
-          </motion.p>
-          <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button 
-              onClick={() => openWhatsApp()}
-              className="bg-primary hover:bg-primary-hover text-black px-8 py-4 rounded-full font-bold transition-all shadow-[0_0_30px_rgba(16,185,129,0.3)] flex items-center gap-2 text-lg"
-            >
-              <MessageCircle className="w-5 h-5" />
-              Pedir por WhatsApp
-            </button>
-            <button 
-              onClick={() => document.getElementById('combos')?.scrollIntoView({ behavior: 'smooth' })}
-              className="border border-primary/50 text-primary hover:bg-primary/10 px-8 py-4 rounded-full font-bold transition-all flex items-center gap-2 text-lg"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              Ver Combos
-            </button>
-          </motion.div>
-        </motion.div>
-
-        <motion.div 
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-dark-muted"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <span className="text-[10px] uppercase tracking-widest font-bold">Explorar</span>
-          <ChevronDown className="w-5 h-5" />
-        </motion.div>
-      </section>
-
-      {/* Combos */}
-      <section id="combos" className="py-24 px-4 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 px-3 py-1">
-            <Star className="w-4 h-4 mr-2" /> Ofertas Especiales
-          </Badge>
-          <h2 className="text-4xl md:text-5xl font-orbitron font-bold mb-4">Combos Promocionales</h2>
-          <p className="text-dark-muted text-lg max-w-xl mx-auto">
-            Seleccionados por expertos para maximizar tus resultados físicos.
           </p>
+          <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+            <button onClick={() => openWhatsApp()} className="btn btn-primary-custom btn-lg rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2">
+              <MessageCircle size={20} /> Pedir por WhatsApp
+            </button>
+            <a href="#combos" className="btn btn-outline-secondary btn-lg rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2 text-white border-secondary">
+              <ShoppingCart size={20} /> Ver Combos
+            </a>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="position-absolute bottom-0 start-50 translate-middle-x mb-4 text-secondary animate-bounce">
+          <ChevronDown size={30} />
+        </div>
+      </section>
+
+      {/* Combos Section */}
+      <section id="combos" className="py-5 container">
+        <div className="text-center mb-5">
+          <h2 className="display-4 font-orbitron fw-bold mb-3">Combos Promocionales</h2>
+          <p className="text-secondary">Seleccionados por expertos para maximizar tus resultados físicos.</p>
+        </div>
+
+        <div className="row g-4">
           {combos.map((combo) => (
-            <motion.div 
-              key={combo.id}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-50px' }}
-              variants={fadeInUp}
-              whileHover={{ y: -10 }}
-              className="bg-dark-card border border-dark-border rounded-3xl overflow-hidden group hover:border-primary/50 transition-all"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <img src={combo.image} alt={combo.name} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-                {combo.discount && (
-                  <div className="absolute top-4 right-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-                    {combo.discount}
-                  </div>
-                )}
-              </div>
-              <div className="p-8">
-                <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">{combo.name}</h3>
-                <p className="text-dark-muted text-sm mb-6 leading-relaxed line-clamp-2">{combo.description}</p>
-                <div className="space-y-3 mb-8">
-                  {combo.items.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-xs font-medium text-gray-300">
-                      <div className="w-1.5 h-1.5 bg-primary rounded-full" />
-                      {item}
-                    </div>
-                  ))}
+            <div key={combo.id} className="col-12 col-md-6 col-lg-4">
+              <div className="card h-100 card-dark">
+                <div className="position-relative overflow-hidden" style={{ height: '240px' }}>
+                  <img src={combo.image} className="card-img-top h-100 w-100 object-fit-cover" alt={combo.name} />
+                  {combo.discount && (
+                    <span className="position-absolute top-0 end-0 m-3 badge bg-danger rounded-pill fw-bold">
+                      {combo.discount}
+                    </span>
+                  )}
                 </div>
-                <div className="flex items-center justify-between mb-8">
-                  <div className="text-3xl font-bold text-primary font-orbitron">
-                    ${combo.price.toLocaleString('es-AR')}
+                <div className="card-body p-4 d-flex flex-column">
+                  <h3 className="h4 fw-bold mb-2">{combo.name}</h3>
+                  <p className="text-secondary small mb-4 flex-grow-1">{combo.description}</p>
+                  
+                  <div className="mb-4">
+                    {combo.items.map((item, idx) => (
+                      <div key={idx} className="d-flex align-items-center gap-2 mb-1 small text-light opacity-75">
+                        <div style={{ width: '6px', height: '6px' }} className="bg-primary-custom rounded-circle"></div>
+                        {item}
+                      </div>
+                    ))}
                   </div>
+
+                  <div className="d-flex align-items-center justify-content-between mb-4">
+                    <span className="h2 fw-bold text-primary-custom font-orbitron m-0">
+                      ${combo.price.toLocaleString('es-AR')}
+                    </span>
+                  </div>
+
+                  <button onClick={() => openWhatsApp(combo.name)} className="btn btn-primary-custom w-100 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2">
+                    <MessageCircle size={18} /> Pedir ahora
+                  </button>
                 </div>
-                <button 
-                  onClick={() => openWhatsApp(combo.name)}
-                  className="w-full py-4 bg-primary hover:bg-primary-hover text-black rounded-2xl font-bold transition-all flex items-center justify-center gap-2"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  Pedir por WhatsApp
-                </button>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
 
-      {/* Links Externos */}
-      {links.length > 0 && (
-        <section className="py-24 px-4 bg-dark-card/50">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 px-3 py-1">
-                <ExternalLink className="w-4 h-4 mr-2" /> Más del Negocio
-              </Badge>
-              <h2 className="text-4xl md:text-5xl font-orbitron font-bold mb-4">Nuestras Aplicaciones</h2>
+      {/* Benefits */}
+      <section className="py-5 bg-dark border-top border-bottom border-secondary border-opacity-10">
+        <div className="container">
+          <div className="row g-4 text-center">
+            <div className="col-md-4">
+              <div className="p-4 card-dark h-100 d-flex flex-column align-items-center">
+                <Truck className="text-primary-custom mb-3" size={40} />
+                <h4 className="fw-bold">Envíos a todo el país</h4>
+                <p className="text-secondary small">Llegamos a cada rincón de Argentina con los mejores suplementos.</p>
+              </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {links.map((link) => {
-                const Icon = IconMap[link.icon] || ExternalLink;
-                return (
-                  <a 
-                    key={link.id} 
-                    href={link.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-6 p-6 bg-dark-card border border-dark-border rounded-3xl hover:border-primary/50 hover:bg-primary/5 transition-all group"
-                  >
-                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-all">
-                      <Icon className="w-8 h-8 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="text-xl font-bold mb-1">{link.title}</h4>
-                      <p className="text-dark-muted text-sm">{link.description}</p>
-                    </div>
-                    <ArrowRight className="ml-auto w-6 h-6 text-dark-muted group-hover:text-primary transition-all group-hover:translate-x-2" />
-                  </a>
-                );
-              })}
+            <div className="col-md-4">
+              <div className="p-4 card-dark h-100 d-flex flex-column align-items-center">
+                <ShieldCheck className="text-primary-custom mb-3" size={40} />
+                <h4 className="fw-bold">Calidad Certificada</h4>
+                <p className="text-secondary small">Solo marcas líderes y productos originales para tu seguridad.</p>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="p-4 card-dark h-100 d-flex flex-column align-items-center">
+                <Clock className="text-primary-custom mb-3" size={40} />
+                <h4 className="fw-bold">Atención 24/7</h4>
+                <p className="text-secondary small">Asesoramiento personalizado por WhatsApp en cualquier momento.</p>
+              </div>
             </div>
           </div>
-        </section>
-      )}
-
-      {/* Benefits */}
-      <section className="py-24 px-4 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {config.benefits.map((benefit, idx) => {
-            const Icon = IconMap[benefit.icon] || Zap;
-            return (
-              <div key={idx} className="p-8 bg-dark-card border border-dark-border rounded-3xl hover:bg-white/5 transition-all group">
-                <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-all">
-                  <Icon className="w-6 h-6 text-primary" />
-                </div>
-                <h4 className="text-xl font-bold mb-3">{benefit.title}</h4>
-                <p className="text-dark-muted text-sm leading-relaxed">{benefit.description}</p>
-              </div>
-            );
-          })}
         </div>
       </section>
 
-      {/* CTA Final */}
-      <section className="py-24 px-4 bg-gradient-to-t from-black to-dark-bg">
-        <div className="max-w-4xl mx-auto text-center">
-          <Sparkles className="w-16 h-16 text-primary mx-auto mb-8 animate-pulse-slow" />
-          <h2 className="text-4xl md:text-6xl font-orbitron font-bold mb-6">{config.finalCTA.title}</h2>
-          <p className="text-xl text-dark-muted mb-12">{config.finalCTA.subtitle}</p>
-          <button 
-            onClick={() => openWhatsApp()}
-            className="px-12 py-6 bg-primary hover:bg-primary-hover text-black text-xl font-bold rounded-full transition-all shadow-[0_0_50px_rgba(16,185,129,0.4)] hover:shadow-[0_0_80px_rgba(16,185,129,0.6)] flex items-center gap-3 mx-auto"
-          >
-            <MessageCircle className="w-7 h-7" />
-            {config.finalCTA.buttonText}
+      {/* CTA Section */}
+      <section className="py-5 container text-center">
+        <div className="py-5">
+          <h2 className="display-5 font-orbitron fw-bold mb-4">{config.finalCTA.title}</h2>
+          <p className="text-secondary mb-5 mx-auto fs-5" style={{ maxWidth: '700px' }}>{config.finalCTA.subtitle}</p>
+          <button onClick={() => openWhatsApp()} className="btn btn-primary-custom btn-lg px-5 py-3 rounded-pill fs-4">
+             {config.finalCTA.buttonText}
           </button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-dark-border bg-black/50 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="text-center md:text-left">
-            <h3 className="text-2xl font-orbitron font-bold text-white mb-2">{config.brand.name}</h3>
-            <p className="text-dark-muted text-sm">{config.brand.description}</p>
+      <footer className="py-5 bg-black border-top border-secondary border-opacity-10">
+        <div className="container">
+          <div className="row align-items-center justify-content-between text-center text-md-start">
+            <div className="col-md-4 mb-4 mb-md-0">
+              <h3 className="font-orbitron fw-bold m-0">{config.brand.name}</h3>
+              <p className="text-secondary small m-0">{config.brand.description}</p>
+            </div>
+            <div className="col-md-4 mb-4 mb-md-0 d-flex justify-content-center gap-4">
+              <a href="#" className="text-secondary text-decoration-none hover-primary">Instagram</a>
+              <a href="#" className="text-secondary text-decoration-none hover-primary">WhatsApp</a>
+              <a href="#" className="text-secondary text-decoration-none hover-primary">Facebook</a>
+            </div>
+            <div className="col-md-4 text-md-end">
+              <p className="text-secondary small m-0">© {new Date().getFullYear()} Elite Performance Tucumán</p>
+            </div>
           </div>
-          <div className="flex gap-8 text-sm text-dark-muted">
-            <a href={`https://wa.me/${config.brand.whatsapp}`} target="_blank" className="hover:text-primary transition-all">WhatsApp</a>
-            <a href="#" className="hover:text-primary transition-all">Instagram</a>
-            <a href="#" className="hover:text-primary transition-all">Ubicación</a>
-          </div>
-          <p className="text-[10px] uppercase tracking-widest text-dark-muted">
-            © {new Date().getFullYear()} {config.brand.name}. Hecho con ❤️
-          </p>
         </div>
       </footer>
-
-      {/* WhatsApp Floating Button */}
-      <button 
-        onClick={() => openWhatsApp()}
-        className="fixed bottom-6 right-6 z-50 p-5 bg-primary text-black rounded-full shadow-[0_0_30px_rgba(16,185,129,0.4)] hover:scale-110 active:scale-95 transition-all animate-bounce"
-      >
-        <MessageCircle className="w-8 h-8" />
-        <span className="absolute -top-1 -right-1 flex h-4 w-4">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500"></span>
-        </span>
-      </button>
     </div>
   );
 };
-
-const Badge: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
-  <span className={`inline-flex items-center rounded-full text-xs font-medium ${className}`}>
-    {children}
-  </span>
-);
 
 export default LandingPage;

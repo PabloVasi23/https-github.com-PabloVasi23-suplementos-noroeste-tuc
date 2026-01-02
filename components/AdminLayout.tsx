@@ -21,7 +21,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { name: 'Combos', href: '/admin/combos', icon: Package },
+    { name: 'Productos', href: '/admin/combos', icon: Package },
     { name: 'Links Externos', href: '/admin/links', icon: LinkIcon },
   ];
 
@@ -31,89 +31,84 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen bg-dark-bg font-sans">
-      {/* Mobile sidebar overlay */}
+    <div className="d-flex min-vh-100 bg-black overflow-hidden">
+      {/* Sidebar Mobile Overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="position-fixed w-100 h-100 top-0 start-0 bg-black bg-opacity-50 z-index-1020 d-lg-none"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-dark-card border-r border-dark-border transform transition-transform duration-200 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-6 border-b border-dark-border">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center border border-primary/20">
-                <Dumbbell className="w-5 h-5 text-primary" />
+      {/* Sidebar Content */}
+      <aside className={`bg-dark border-end border-secondary border-opacity-25 transition-all position-fixed position-lg-relative h-100 z-index-1030 ${sidebarOpen ? 'd-block' : 'd-none d-lg-block'}`} style={{ width: '280px', minWidth: '280px' }}>
+        <div className="d-flex flex-column h-100">
+          <div className="p-4 border-bottom border-secondary border-opacity-25 d-flex align-items-center justify-content-between">
+            <div className="d-flex align-items-center gap-3">
+              <div className="bg-primary-custom p-2 rounded-3 text-black">
+                <Dumbbell size={24} />
               </div>
-              <div>
-                <h1 className="text-lg font-bold text-white leading-none">Admin</h1>
-                <p className="text-[10px] text-dark-muted">SuplementosTuc</p>
-              </div>
+              <h2 className="h5 fw-bold font-orbitron m-0 text-white">ADMIN</h2>
             </div>
-            <button className="lg:hidden text-dark-muted hover:text-white" onClick={() => setSidebarOpen(false)}>
-              <X className="w-5 h-5" />
+            <button className="btn btn-link text-secondary d-lg-none p-0" onClick={() => setSidebarOpen(false)}>
+              <X size={24} />
             </button>
           </div>
 
-          <nav className="flex-1 p-4 space-y-2">
+          <nav className="flex-grow-1 p-3 overflow-auto">
             {navigation.map((item) => {
-              const Icon = item.icon;
               const active = location.pathname === item.href;
+              const Icon = item.icon;
               return (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                    active ? 'bg-primary/10 text-primary border border-primary/20' : 'text-dark-muted hover:bg-white/5 hover:text-white'
-                  }`}
+                  className={`nav-link d-flex align-items-center gap-3 p-3 rounded-3 mb-2 transition-all ${active ? 'bg-primary-custom text-black' : 'text-secondary hover-bg-white-opacity'}`}
                 >
-                  <Icon className="w-5 h-5" />
-                  <span className="font-medium text-sm">{item.name}</span>
+                  <Icon size={20} />
+                  <span className="fw-bold">{item.name}</span>
                 </Link>
               );
             })}
-            <div className="pt-4 border-t border-dark-border mt-4">
-              <Link to="/" className="flex items-center gap-3 px-4 py-3 rounded-lg text-dark-muted hover:bg-white/5 hover:text-white transition-all">
-                <Home className="w-5 h-5" />
-                <span className="font-medium text-sm">Ver Sitio Público</span>
+            
+            <div className="mt-4 pt-4 border-top border-secondary border-opacity-25">
+               <Link to="/" className="nav-link d-flex align-items-center gap-3 p-3 text-secondary hover-bg-white-opacity rounded-3">
+                <Home size={20} />
+                <span className="fw-bold">Ver Sitio Web</span>
               </Link>
             </div>
           </nav>
 
-          <div className="p-4 border-t border-dark-border">
-            <button
-              onClick={handleLogout}
-              className="flex items-center w-full gap-3 px-4 py-3 rounded-lg text-dark-muted hover:text-red-400 hover:bg-red-500/10 transition-all"
-            >
-              <LogOut className="w-5 h-5" />
-              <span className="font-medium text-sm">Cerrar Sesión</span>
+          <div className="p-3 border-top border-secondary border-opacity-25">
+            <button onClick={handleLogout} className="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 py-3 rounded-3 fw-bold">
+              <LogOut size={18} /> Cerrar Sesión
             </button>
           </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="lg:pl-64 flex flex-col min-h-screen">
-        <header className="bg-dark-card/50 backdrop-blur-md border-b border-dark-border sticky top-0 z-30">
-          <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center gap-4">
-              <button className="lg:hidden text-dark-muted hover:text-white" onClick={() => setSidebarOpen(true)}>
-                <Menu className="w-6 h-6" />
-              </button>
-              <h2 className="text-lg font-semibold text-white">
-                {navigation.find(n => n.href === location.pathname)?.name || 'Panel de Control'}
-              </h2>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-medium text-white">{config.brand.name}</p>
-              <p className="text-xs text-dark-muted">Modo Administrador</p>
+      <div className="flex-grow-1 d-flex flex-column h-100 overflow-hidden" style={{ minWidth: 0 }}>
+        {/* Header */}
+        <header className="navbar navbar-dark bg-dark bg-opacity-50 border-bottom border-secondary border-opacity-25 px-4 py-3 sticky-top">
+          <div className="container-fluid p-0">
+            <button className="btn btn-link text-secondary d-lg-none p-0 me-3" onClick={() => setSidebarOpen(true)}>
+              <Menu size={24} />
+            </button>
+            <div className="ms-auto d-flex align-items-center gap-3">
+              <div className="text-end d-none d-sm-block">
+                <p className="text-white small fw-bold m-0">{config.brand.name}</p>
+                <p className="text-secondary m-0" style={{ fontSize: '0.65rem' }}>SESIÓN ACTIVA</p>
+              </div>
+              <div className="bg-primary-custom rounded-circle d-flex align-items-center justify-content-center fw-bold text-black" style={{ width: '40px', height: '40px' }}>
+                PV
+              </div>
             </div>
           </div>
         </header>
-        <main className="p-6 flex-1">
+
+        {/* Page Content */}
+        <main className="flex-grow-1 overflow-auto p-4 p-md-5">
           {children}
         </main>
       </div>

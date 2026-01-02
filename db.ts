@@ -3,10 +3,10 @@ import { GlobalConfig, Combo, ExternalLink } from './types';
 import { INITIAL_CONFIG, INITIAL_COMBOS, INITIAL_LINKS } from './constants';
 
 const DB_KEYS = {
-  CONFIG: 'tuc_config_v2',
-  COMBOS: 'tuc_combos_v2',
-  LINKS: 'tuc_links_v2',
-  AUTH: 'tuc_auth_v2'
+  CONFIG: 'tuc_config_v3',
+  COMBOS: 'tuc_combos_v3',
+  LINKS: 'tuc_links_v3',
+  AUTH: 'tuc_auth_v3'
 };
 
 export const db = {
@@ -66,8 +66,11 @@ export const db = {
     return localStorage.getItem(DB_KEYS.AUTH) === 'true';
   },
   login: (user: string, pass: string) => {
-    const config = db.getConfig();
-    if (user === config.admin.username && pass === config.admin.password) {
+    // Fix: Accessing environment variables via process.env instead of import.meta.env to resolve TypeScript errors
+    const envUser = process.env.VITE_ADMIN_USER || INITIAL_CONFIG.admin.username;
+    const envPass = process.env.VITE_ADMIN_PASSWORD || INITIAL_CONFIG.admin.password;
+    
+    if (user === envUser && pass === envPass) {
       localStorage.setItem(DB_KEYS.AUTH, 'true');
       return true;
     }

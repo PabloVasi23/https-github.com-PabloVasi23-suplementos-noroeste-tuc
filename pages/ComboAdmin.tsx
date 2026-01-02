@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
-import { Plus, Pencil, Trash2, X, Save, Image as ImageIcon, Check } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, Save, Check, Image as ImageIcon } from 'lucide-react';
 import { db } from '../db';
 import { Combo } from '../types';
 
@@ -15,7 +15,7 @@ const ComboAdmin: React.FC = () => {
   }, []);
 
   const handleDelete = (id: number) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este combo?')) {
+    if (window.confirm('¿Estás seguro de que quieres eliminar este producto?')) {
       db.deleteCombo(id);
       setCombos(db.getCombos());
     }
@@ -32,7 +32,7 @@ const ComboAdmin: React.FC = () => {
       setIsNew(false);
     } else {
       setEditing({
-        id: db.getCombos().length + 1,
+        id: Date.now(),
         name: '',
         description: '',
         price: 0,
@@ -47,15 +47,12 @@ const ComboAdmin: React.FC = () => {
     }
   };
 
-  const closeForm = () => {
-    setEditing(null);
-    setIsNew(false);
-  };
+  const closeForm = () => setEditing(null);
 
   const handleSave = () => {
     if (!editing) return;
+    const current = db.getCombos();
     if (isNew) {
-      const current = db.getCombos();
       db.saveCombos([...current, editing]);
     } else {
       db.updateCombo(editing.id, editing);
@@ -66,57 +63,46 @@ const ComboAdmin: React.FC = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="py-2">
+        <header className="mb-5 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Combos Promocionales</h1>
-            <p className="text-dark-muted">Administra los productos y ofertas de la tienda.</p>
+            <h1 className="fw-bold font-orbitron m-0 text-white">GESTIONAR PRODUCTOS</h1>
+            <p className="text-secondary m-0">Administra los combos y promociones activos.</p>
           </div>
-          <button 
-            onClick={() => openForm()}
-            className="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-hover text-black font-bold rounded-2xl transition-all"
-          >
-            <Plus className="w-5 h-5" />
-            Nuevo Combo
+          <button onClick={() => openForm()} className="btn btn-primary-custom px-4 py-3 rounded-3 fw-bold d-flex align-items-center gap-2">
+            <Plus size={20} /> Añadir Producto
           </button>
-        </div>
+        </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="row g-4">
           {combos.map((combo) => (
-            <div key={combo.id} className="bg-dark-card border border-dark-border rounded-3xl overflow-hidden flex flex-col">
-              <div className="h-48 relative">
-                <img src={combo.image} alt="" className="w-full h-full object-cover" />
-                <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-bold uppercase shadow-lg ${combo.active ? 'bg-primary text-black' : 'bg-red-500 text-white'}`}>
-                  {combo.active ? 'Activo' : 'Inactivo'}
+            <div key={combo.id} className="col-12 col-md-6 col-xl-4">
+              <div className="card card-dark h-100">
+                <div className="position-relative overflow-hidden rounded-top" style={{ height: '200px' }}>
+                  <img src={combo.image} alt="" className="w-100 h-100 object-fit-cover opacity-75" />
+                  <div className={`position-absolute top-0 end-0 m-3 badge rounded-pill fw-bold ${combo.active ? 'bg-success' : 'bg-danger'}`}>
+                    {combo.active ? 'ACTIVO' : 'INACTIVO'}
+                  </div>
                 </div>
-              </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <h3 className="text-xl font-bold text-white mb-2">{combo.name}</h3>
-                <p className="text-dark-muted text-sm mb-4 line-clamp-2">{combo.description}</p>
-                <div className="text-2xl font-bold text-primary mb-6 font-orbitron">
-                  ${combo.price.toLocaleString('es-AR')}
-                </div>
-                <div className="mt-auto flex items-center gap-2 pt-6 border-t border-dark-border">
-                  <button 
-                    onClick={() => openForm(combo)}
-                    className="flex-1 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2"
-                  >
-                    <Pencil className="w-4 h-4" /> Editar
-                  </button>
-                  <button 
-                    onClick={() => handleToggle(combo)}
-                    className={`p-3 rounded-xl transition-all flex items-center justify-center ${combo.active ? 'bg-orange-500/10 text-orange-400 hover:bg-orange-500/20' : 'bg-primary/10 text-primary hover:bg-primary/20'}`}
-                    title={combo.active ? 'Desactivar' : 'Activar'}
-                  >
-                    {combo.active ? <X className="w-5 h-5" /> : <Check className="w-5 h-5" />}
-                  </button>
-                  <button 
-                    onClick={() => handleDelete(combo.id)}
-                    className="p-3 bg-red-500/10 text-red-500 hover:bg-red-500/20 rounded-xl transition-all flex items-center justify-center"
-                    title="Eliminar"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
+                <div className="card-body p-4">
+                  <h3 className="h5 fw-bold mb-1 text-white">{combo.name}</h3>
+                  <div className="h4 fw-bold text-primary-custom font-orbitron mb-3">${combo.price.toLocaleString('es-AR')}</div>
+                  <p className="text-secondary small mb-4 line-clamp-2">{combo.description}</p>
+                  
+                  <div className="d-flex gap-2 pt-3 border-top border-secondary border-opacity-25">
+                    <button onClick={() => openForm(combo)} className="btn btn-dark border-secondary border-opacity-25 flex-grow-1 d-flex align-items-center justify-content-center gap-2">
+                      <Pencil size={16} /> Editar
+                    </button>
+                    <button 
+                      onClick={() => handleToggle(combo)} 
+                      className={`btn ${combo.active ? 'btn-outline-warning' : 'btn-outline-success'} d-flex align-items-center justify-content-center p-2`}
+                    >
+                      {combo.active ? <X size={20} /> : <Check size={20} />}
+                    </button>
+                    <button onClick={() => handleDelete(combo.id)} className="btn btn-outline-danger d-flex align-items-center justify-content-center p-2">
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -124,109 +110,71 @@ const ComboAdmin: React.FC = () => {
         </div>
       </div>
 
-      {/* Editor Modal */}
+      {/* Editor Modal Mockup */}
       {editing && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={closeForm} />
-          <div className="bg-dark-card border border-dark-border w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl relative z-10 p-8 shadow-2xl">
-            <h2 className="text-2xl font-bold text-white mb-8 font-orbitron">{isNew ? 'Crear Nuevo Combo' : 'Editar Combo'}</h2>
-            
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-dark-muted">Nombre del Combo</label>
-                  <input 
-                    type="text" 
-                    value={editing.name} 
-                    onChange={(e) => setEditing({...editing, name: e.target.value})}
-                    className="w-full bg-black border border-dark-border rounded-xl px-4 py-3 text-white focus:border-primary outline-none transition-all"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-dark-muted">Precio</label>
-                  <input 
-                    type="number" 
-                    value={editing.price} 
-                    onChange={(e) => setEditing({...editing, price: Number(e.target.value)})}
-                    className="w-full bg-black border border-dark-border rounded-xl px-4 py-3 text-white focus:border-primary outline-none transition-all"
-                  />
-                </div>
+        <div className="modal show d-block bg-black bg-opacity-75 z-index-1050 overflow-auto py-5 px-3">
+          <div className="modal-dialog modal-lg modal-dialog-centered">
+            <div className="modal-content card-dark shadow-lg">
+              <div className="modal-header border-secondary border-opacity-25 p-4">
+                <h2 className="modal-title h4 fw-bold font-orbitron text-white">{isNew ? 'NUEVO PRODUCTO' : 'EDITAR PRODUCTO'}</h2>
+                <button type="button" className="btn-close btn-close-white" onClick={closeForm}></button>
               </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-dark-muted">Descripción</label>
-                <textarea 
-                  rows={3}
-                  value={editing.description} 
-                  onChange={(e) => setEditing({...editing, description: e.target.value})}
-                  className="w-full bg-black border border-dark-border rounded-xl px-4 py-3 text-white focus:border-primary outline-none transition-all resize-none"
-                />
-              </div>
-
-              <div className="space-y-4">
-                <label className="text-sm font-medium text-dark-muted">Productos Incluidos</label>
-                {editing.items.map((item, idx) => (
-                  <div key={idx} className="flex gap-2">
-                    <input 
-                      type="text" 
-                      value={item} 
-                      onChange={(e) => {
-                        const newItems = [...editing.items];
-                        newItems[idx] = e.target.value;
-                        setEditing({...editing, items: newItems});
-                      }}
-                      className="flex-1 bg-black border border-dark-border rounded-xl px-4 py-3 text-white focus:border-primary outline-none transition-all"
-                      placeholder={`Producto ${idx + 1}`}
-                    />
-                    {editing.items.length > 1 && (
-                      <button 
-                        onClick={() => {
-                          const newItems = editing.items.filter((_, i) => i !== idx);
+              <div className="modal-body p-4">
+                <div className="row g-4">
+                  <div className="col-md-8">
+                    <div className="mb-3">
+                      <label className="form-label text-secondary small fw-bold">Nombre del Producto</label>
+                      <input type="text" className="form-control bg-black border-secondary border-opacity-25 text-white py-3" value={editing.name} onChange={(e) => setEditing({...editing, name: e.target.value})} />
+                    </div>
+                  </div>
+                  <div className="col-md-4">
+                    <div className="mb-3">
+                      <label className="form-label text-secondary small fw-bold">Precio ($)</label>
+                      <input type="number" className="form-control bg-black border-secondary border-opacity-25 text-white py-3" value={editing.price} onChange={(e) => setEditing({...editing, price: Number(e.target.value)})} />
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="mb-3">
+                      <label className="form-label text-secondary small fw-bold">Descripción Corta</label>
+                      <textarea className="form-control bg-black border-secondary border-opacity-25 text-white py-3" rows={3} value={editing.description} onChange={(e) => setEditing({...editing, description: e.target.value})}></textarea>
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <label className="form-label text-secondary small fw-bold d-flex justify-content-between">
+                      Productos Incluidos
+                      <button onClick={() => setEditing({...editing, items: [...editing.items, '']})} className="btn btn-link text-primary-custom p-0 text-decoration-none small">+ Añadir</button>
+                    </label>
+                    {editing.items.map((item, idx) => (
+                      <div key={idx} className="input-group mb-2">
+                        <input type="text" className="form-control bg-black border-secondary border-opacity-25 text-white" placeholder={`Item ${idx + 1}`} value={item} onChange={(e) => {
+                          const newItems = [...editing.items];
+                          newItems[idx] = e.target.value;
                           setEditing({...editing, items: newItems});
-                        }}
-                        className="p-3 bg-red-500/10 text-red-500 rounded-xl"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
-                    )}
+                        }} />
+                        {editing.items.length > 1 && (
+                          <button className="btn btn-outline-danger" onClick={() => {
+                            const newItems = editing.items.filter((_, i) => i !== idx);
+                            setEditing({...editing, items: newItems});
+                          }}><Trash2 size={16} /></button>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                ))}
-                <button 
-                  onClick={() => setEditing({...editing, items: [...editing.items, '']})}
-                  className="w-full py-3 border-2 border-dashed border-dark-border text-dark-muted hover:text-white hover:border-primary/50 transition-all rounded-xl text-sm flex items-center justify-center gap-2"
-                >
-                  <Plus className="w-4 h-4" /> Agregar Producto
-                </button>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-dark-muted">URL de Imagen</label>
-                <div className="flex gap-4 items-center">
-                  <div className="w-20 h-20 rounded-xl border border-dark-border bg-black overflow-hidden shrink-0">
-                    <img src={editing.image} className="w-full h-full object-cover" />
+                  <div className="col-12">
+                    <div className="mb-3">
+                      <label className="form-label text-secondary small fw-bold">URL de Imagen</label>
+                      <div className="d-flex gap-3 align-items-center">
+                        <img src={editing.image} alt="Preview" className="rounded" style={{ width: '80px', height: '80px', objectFit: 'cover' }} />
+                        <input type="text" className="form-control bg-black border-secondary border-opacity-25 text-white py-3" value={editing.image} onChange={(e) => setEditing({...editing, image: e.target.value})} />
+                      </div>
+                    </div>
                   </div>
-                  <input 
-                    type="text" 
-                    value={editing.image} 
-                    onChange={(e) => setEditing({...editing, image: e.target.value})}
-                    className="flex-1 bg-black border border-dark-border rounded-xl px-4 py-3 text-white focus:border-primary outline-none transition-all"
-                    placeholder="https://..."
-                  />
                 </div>
               </div>
-
-              <div className="pt-8 flex items-center gap-4">
-                <button 
-                  onClick={closeForm}
-                  className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-bold transition-all"
-                >
-                  Cancelar
-                </button>
-                <button 
-                  onClick={handleSave}
-                  className="flex-1 py-4 bg-primary hover:bg-primary-hover text-black rounded-2xl font-bold transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
-                >
-                  <Save className="w-5 h-5" /> Guardar Combo
+              <div className="modal-footer border-secondary border-opacity-25 p-4">
+                <button type="button" className="btn btn-outline-secondary px-4 py-2" onClick={closeForm}>Cancelar</button>
+                <button type="button" className="btn btn-primary-custom px-5 py-2 d-flex align-items-center gap-2" onClick={handleSave}>
+                  <Save size={18} /> Guardar Cambios
                 </button>
               </div>
             </div>

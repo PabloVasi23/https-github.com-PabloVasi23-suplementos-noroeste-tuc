@@ -5,9 +5,9 @@ import AdminLayout from '../components/AdminLayout';
 import { 
   Package, 
   DollarSign, 
-  TrendingUp, 
   ExternalLink, 
   ArrowRight,
+  TrendingUp,
   Plus
 } from 'lucide-react';
 import { db } from '../db';
@@ -16,98 +16,133 @@ const Dashboard: React.FC = () => {
   const combos = db.getCombos();
   const links = db.getLinks();
   
-  const activeCombos = combos.filter(c => c.active).length;
-  const activeLinks = links.filter(l => l.active).length;
+  const activeCombosCount = combos.filter(c => c.active).length;
+  const activeLinksCount = links.filter(l => l.active).length;
   const averagePrice = combos.length > 0 
     ? Math.round(combos.reduce((acc, c) => acc + c.price, 0) / combos.length) 
     : 0;
 
-  const stats = [
-    { title: 'Total Combos', value: combos.length, icon: Package, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-    { title: 'Links Activos', value: activeLinks, icon: ExternalLink, color: 'text-blue-400', bg: 'bg-blue-500/10' },
-    { title: 'Precio Promedio', value: `$${averagePrice.toLocaleString('es-AR')}`, icon: DollarSign, color: 'text-purple-400', bg: 'bg-purple-500/10' },
-    { title: 'Estado', value: 'Activo', icon: TrendingUp, color: 'text-orange-400', bg: 'bg-orange-500/10' },
-  ];
-
   return (
     <AdminLayout>
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Panel de Control</h1>
-          <p className="text-dark-muted">Resumen general de tu tienda de suplementos.</p>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, i) => (
-            <div key={i} className="bg-dark-card border border-dark-border p-6 rounded-3xl">
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-sm font-medium text-dark-muted">{stat.title}</p>
-                <div className={`${stat.bg} ${stat.color} p-2 rounded-xl`}>
-                  <stat.icon className="w-5 h-5" />
-                </div>
-              </div>
-              <div className="text-2xl font-bold text-white">{stat.value}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Link to="/admin/combos" className="bg-dark-card border border-dark-border p-8 rounded-3xl hover:border-primary/50 transition-all group">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:bg-primary/20 transition-all">
-                  <Package className="w-7 h-7 text-primary" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white">Gestionar Combos</h3>
-                  <p className="text-dark-muted text-sm">Crea, edita o elimina tus ofertas</p>
-                </div>
-              </div>
-              <ArrowRight className="w-6 h-6 text-dark-muted group-hover:text-primary transition-all group-hover:translate-x-2" />
-            </div>
-          </Link>
-
-          <Link to="/admin/links" className="bg-dark-card border border-dark-border p-8 rounded-3xl hover:border-blue-500/50 transition-all group">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center group-hover:bg-blue-500/20 transition-all">
-                  <ExternalLink className="w-7 h-7 text-blue-400" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white">Gestionar Links</h3>
-                  <p className="text-dark-muted text-sm">Conecta otras aplicaciones</p>
-                </div>
-              </div>
-              <ArrowRight className="w-6 h-6 text-dark-muted group-hover:text-blue-400 transition-all group-hover:translate-x-2" />
-            </div>
-          </Link>
-        </div>
-
-        {/* Recent Items */}
-        <div className="bg-dark-card border border-dark-border rounded-3xl overflow-hidden">
-          <div className="px-8 py-6 border-b border-dark-border flex items-center justify-between">
-            <h3 className="font-bold text-white">Combos Recientes</h3>
-            <Link to="/admin/combos" className="text-primary text-sm font-medium hover:underline">Ver todos</Link>
+      <div className="py-4">
+        <header className="mb-5 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+          <div>
+            <h1 className="fw-bold font-orbitron m-0 text-white">DASHBOARD</h1>
+            <p className="text-secondary mb-0">Gestión de stock y configuraciones.</p>
           </div>
-          <div className="divide-y divide-dark-border">
-            {combos.slice(0, 5).map((combo) => (
-              <div key={combo.id} className="px-8 py-4 flex items-center justify-between hover:bg-white/5 transition-all">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-dark-bg rounded-lg overflow-hidden border border-dark-border">
-                    <img src={combo.image} alt="" className="w-full h-full object-cover" />
+          <Link to="/admin/combos" className="btn btn-primary-custom d-flex align-items-center gap-2 px-4 py-2">
+            <Plus size={18} /> Nuevo Producto
+          </Link>
+        </header>
+
+        {/* Stats Grid */}
+        <div className="row g-4 mb-5">
+          <div className="col-12 col-sm-6 col-lg-3">
+            <div className="card card-dark p-4 shadow-sm border-0 border-start border-primary-custom border-4">
+              <div className="d-flex align-items-center justify-content-between mb-2">
+                <span className="text-secondary small fw-bold">Total Combos</span>
+                <Package className="text-primary-custom" size={20} />
+              </div>
+              <div className="h2 fw-bold m-0">{combos.length}</div>
+            </div>
+          </div>
+          <div className="col-12 col-sm-6 col-lg-3">
+            <div className="card card-dark p-4 shadow-sm border-0 border-start border-info border-4">
+              <div className="d-flex align-items-center justify-content-between mb-2">
+                <span className="text-secondary small fw-bold">Combos Activos</span>
+                <TrendingUp className="text-info" size={20} />
+              </div>
+              <div className="h2 fw-bold m-0">{activeCombosCount}</div>
+            </div>
+          </div>
+          <div className="col-12 col-sm-6 col-lg-3">
+            <div className="card card-dark p-4 shadow-sm border-0 border-start border-warning border-4">
+              <div className="d-flex align-items-center justify-content-between mb-2">
+                <span className="text-secondary small fw-bold">Precio Promedio</span>
+                <DollarSign className="text-warning" size={20} />
+              </div>
+              <div className="h2 fw-bold m-0">${averagePrice.toLocaleString('es-AR')}</div>
+            </div>
+          </div>
+          <div className="col-12 col-sm-6 col-lg-3">
+            <div className="card card-dark p-4 shadow-sm border-0 border-start border-secondary border-4">
+              <div className="d-flex align-items-center justify-content-between mb-2">
+                <span className="text-secondary small fw-bold">Links Externos</span>
+                <ExternalLink className="text-secondary" size={20} />
+              </div>
+              <div className="h2 fw-bold m-0">{activeLinksCount}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Access */}
+        <div className="row g-4 mb-5">
+          <div className="col-md-6">
+            <Link to="/admin/combos" className="card card-dark text-decoration-none p-4 hover-lift transition-all group border-primary-custom border-opacity-10">
+              <div className="d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center gap-4">
+                  <div className="bg-primary bg-opacity-10 p-4 rounded-4">
+                    <Package size={32} className="text-primary-custom" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-white">{combo.name}</h4>
-                    <p className="text-[10px] text-dark-muted uppercase tracking-tighter">${combo.price.toLocaleString('es-AR')}</p>
+                    <h3 className="h5 fw-bold text-white m-0">Gestionar Productos</h3>
+                    <p className="text-secondary small m-0">Crear, editar o desactivar combos.</p>
                   </div>
                 </div>
-                <div className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${combo.active ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
-                  {combo.active ? 'Activo' : 'Inactivo'}
-                </div>
+                <ArrowRight className="text-secondary" />
               </div>
-            ))}
+            </Link>
+          </div>
+          <div className="col-md-6">
+            <Link to="/admin/links" className="card card-dark text-decoration-none p-4 hover-lift transition-all group border-secondary border-opacity-10">
+              <div className="d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center gap-4">
+                  <div className="bg-info bg-opacity-10 p-4 rounded-4">
+                    <ExternalLink size={32} className="text-info" />
+                  </div>
+                  <div>
+                    <h3 className="h5 fw-bold text-white m-0">Gestionar Links</h3>
+                    <p className="text-secondary small m-0">Aplicaciones externas y redes.</p>
+                  </div>
+                </div>
+                <ArrowRight className="text-secondary" />
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        {/* Recent Items Table */}
+        <div className="card card-dark overflow-hidden border-0 shadow">
+          <div className="card-header bg-dark py-3 px-4 d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-25">
+            <h5 className="m-0 fw-bold">Últimos Productos Añadidos</h5>
+            <Link to="/admin/combos" className="btn btn-sm btn-link text-primary-custom text-decoration-none">Ver todos</Link>
+          </div>
+          <div className="table-responsive">
+            <table className="table table-dark table-hover m-0 align-middle">
+              <thead>
+                <tr>
+                  <th className="px-4 py-3 text-secondary small text-uppercase">Producto</th>
+                  <th className="px-4 py-3 text-secondary small text-uppercase">Precio</th>
+                  <th className="px-4 py-3 text-secondary small text-uppercase">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {combos.slice(0, 5).map((combo) => (
+                  <tr key={combo.id}>
+                    <td className="px-4 py-3 d-flex align-items-center gap-3">
+                      <img src={combo.image} alt="" className="rounded" style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
+                      <span className="fw-bold">{combo.name}</span>
+                    </td>
+                    <td className="px-4 py-3 text-primary-custom fw-bold">${combo.price.toLocaleString('es-AR')}</td>
+                    <td className="px-4 py-3">
+                      <span className={`badge rounded-pill ${combo.active ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger'}`}>
+                        {combo.active ? 'Activo' : 'Inactivo'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
