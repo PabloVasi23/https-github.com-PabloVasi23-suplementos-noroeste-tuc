@@ -8,15 +8,14 @@
     <style>
       :root {
         --bg-main: #0B0F14;
-        --bg-card: #161B22;
-        --bg-input: #0d1117;
+        --bg-card: #111827;
+        --bg-glass: rgba(17, 24, 39, 0.7);
+        --accent: #00FF88;
+        --accent-alt: #22D3EE;
+        --accent-gradient: linear-gradient(135deg, #00FF88 0%, #22D3EE 100%);
         --text-main: #F3F4F6;
         --text-muted: #9CA3AF;
-        --accent: #00FF88;
-        --accent-glow: rgba(0, 255, 136, 0.3);
-        --accent-alt: #22D3EE;
-        --border-color: rgba(255, 255, 255, 0.08);
-        --glass: rgba(17, 24, 39, 0.7);
+        --border-glass: rgba(255, 255, 255, 0.08);
       }
       
       body { 
@@ -29,76 +28,90 @@
 
       .font-orbitron { font-family: 'Orbitron', sans-serif; }
       
+      /* --- Tipografía --- */
+      .brand-title {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 900;
+        letter-spacing: -2px;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.3));
+      }
+
       /* --- Botones --- */
-      .btn-primary-custom { 
-        background: var(--accent); 
+      .btn-premium { 
+        background: var(--accent-gradient); 
         color: #000; 
         font-weight: 800;
         border: none;
         letter-spacing: 1px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         text-transform: uppercase;
         font-family: 'Orbitron', sans-serif;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
       }
-      .btn-primary-custom:hover { 
-        background: #00e67a; 
-        transform: translateY(-3px);
-        box-shadow: 0 0 30px var(--accent-glow);
+      .btn-premium:hover { 
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
       }
-      .btn-primary-custom:active { transform: translateY(-1px); }
 
-      .btn-outline-custom {
-        border: 1px solid var(--accent-alt);
-        color: var(--accent-alt);
+      .btn-outline-premium {
+        border: 2px solid var(--accent-alt);
+        color: var(--text-main);
         background: transparent;
         font-weight: 700;
         transition: all 0.3s ease;
+        padding: 1rem 2rem;
+        border-radius: 50px;
         font-family: 'Orbitron', sans-serif;
       }
-      .btn-outline-custom:hover {
-        background: var(--accent-alt);
-        color: #000;
-        box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+      .btn-outline-premium:hover {
+        background: rgba(34, 211, 238, 0.1);
+        border-color: var(--accent);
+        text-shadow: 0 0 5px var(--accent);
       }
 
       /* --- Cards --- */
-      .card-futuristic {
+      .card-premium {
         background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: 1rem;
-        transition: all 0.4s ease;
+        border: 1px solid var(--border-glass);
+        border-radius: 1.5rem;
+        transition: all 0.5s ease;
+        overflow: hidden;
         backdrop-filter: blur(10px);
       }
-      .card-futuristic:hover {
+      .card-premium:hover {
         border-color: var(--accent);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 136, 0.05);
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
       }
 
-      /* --- Utils --- */
-      .text-accent { color: var(--accent) !important; }
-      .text-cyan { color: var(--accent-alt) !important; }
-      .bg-glass { background: var(--glass); backdrop-filter: blur(12px); }
+      /* --- Glow Utils --- */
+      .glow-text { text-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
+      .bg-blur { backdrop-filter: blur(15px); }
       
-      .border-accent-soft { border: 1px solid rgba(0, 255, 136, 0.2); }
-      
-      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar { width: 6px; }
       ::-webkit-scrollbar-track { background: var(--bg-main); }
-      ::-webkit-scrollbar-thumb { background: #2D3748; border-radius: 10px; border: 2px solid var(--bg-main); }
+      ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
       ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-      .tracking-tighter { letter-spacing: -0.05em; }
     </style>
 <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
     "bootstrap/": "https://esm.sh/bootstrap@^5.3.8/",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
+    "framer-motion": "https://esm.sh/framer-motion@^12.23.26",
+    "react/": "https://esm.sh/react@^19.2.3/",
     "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
     "vite": "https://esm.sh/vite@^7.3.0",
-    "framer-motion": "https://esm.sh/framer-motion@^12.23.26",
     "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
   }
 }

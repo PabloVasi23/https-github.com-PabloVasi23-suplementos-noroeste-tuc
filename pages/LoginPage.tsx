@@ -1,6 +1,9 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, User, Activity, ArrowLeft, Loader2, ShieldAlert } from 'lucide-react';
+import { Lock, User, Activity, ArrowLeft, Loader2, ShieldCheck } from 'lucide-react';
+// Fix: Added missing import for motion from framer-motion
+import { motion } from 'framer-motion';
 import { db } from '../db';
 
 const LoginPage: React.FC = () => {
@@ -20,95 +23,95 @@ const LoginPage: React.FC = () => {
       if (success) {
         navigate('/admin');
       } else {
-        setError('ACCESO DENEGADO: CREDENCIALES NO VÁLIDAS');
+        setError('ACCESO DENEGADO: CREDENCIALES INCORRECTAS');
         setLoading(false);
       }
-    }, 1500);
+    }, 1200);
   };
 
   return (
     <div className="min-vh-100 d-flex align-items-center justify-content-center bg-black px-3 position-relative overflow-hidden">
       
-      {/* Background Decor */}
-      <div className="position-absolute bg-accent opacity-5 rounded-circle blur-3xl" style={{ width: '600px', height: '600px', top: '-20%', left: '-10%', filter: 'blur(150px)' }}></div>
-      <div className="position-absolute w-100 h-100 opacity-5" style={{ backgroundImage: 'linear-gradient(rgba(0,255,136,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,136,0.2) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+      {/* Dynamic Background Elements */}
+      <div className="position-absolute bg-accent opacity-5 rounded-circle blur-3xl" style={{ width: '400px', height: '400px', top: '-10%', left: '-5%', filter: 'blur(120px)' }}></div>
+      <div className="position-absolute bg-cyan opacity-5 rounded-circle blur-3xl" style={{ width: '400px', height: '400px', bottom: '-10%', right: '-5%', filter: 'blur(120px)' }}></div>
 
-      <div className="card-futuristic w-100 border-accent border-opacity-20 shadow-lg" style={{ maxWidth: '440px', background: 'rgba(22, 27, 34, 0.95)' }}>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="card-premium w-100 border-white border-opacity-10 shadow-2xl" 
+        style={{ maxWidth: '440px', background: 'rgba(17, 24, 39, 0.8)' }}
+      >
         <div className="card-body p-5">
           <div className="text-center mb-5">
-            <div className="d-inline-flex p-4 rounded-circle mb-4 border-accent-soft shadow-inner">
+            <div className="d-inline-flex p-4 rounded-circle mb-4 bg-accent bg-opacity-5 border border-accent border-opacity-20">
               <Activity size={48} className="text-accent" />
             </div>
-            <h1 className="h2 fw-black font-orbitron text-white m-0 tracking-tighter">SISTEMA ADMIN</h1>
-            <p className="text-muted small mt-2 fw-bold font-orbitron tracking-widest opacity-60">INGRESO DE PERSONAL AUTORIZADO</p>
+            <h1 className="h3 fw-black font-orbitron text-white m-0">ELITE CORE</h1>
+            <p className="text-muted small mt-2 fw-bold font-orbitron tracking-widest opacity-40">SISTEMA DE ADMINISTRACIÓN</p>
           </div>
 
           <form onSubmit={handleLogin}>
             <div className="mb-4">
-              <label className="form-label text-accent small fw-black font-orbitron mb-2 tracking-widest">ID USUARIO</label>
+              <label className="form-label text-accent small fw-black font-orbitron mb-2 tracking-widest">OPERADOR</label>
               <div className="input-group">
-                <span className="input-group-text bg-black border-white border-opacity-10 text-muted">
+                <span className="input-group-text bg-black border-white border-opacity-10 text-muted px-3">
                   <User size={18} />
                 </span>
                 <input
                   type="text"
-                  className="form-control bg-black border-white border-opacity-10 text-white font-orbitron px-3 py-3"
-                  style={{ fontSize: '0.8rem' }}
+                  className="form-control bg-black border-white border-opacity-10 text-white font-orbitron py-3 px-4"
+                  style={{ fontSize: '0.9rem', letterSpacing: '1px' }}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="USERNAME"
+                  placeholder="ID USUARIO"
                   required
                 />
               </div>
             </div>
 
             <div className="mb-5">
-              <label className="form-label text-accent small fw-black font-orbitron mb-2 tracking-widest">CLAVE DE ACCESO</label>
+              <label className="form-label text-accent small fw-black font-orbitron mb-2 tracking-widest">PASSWORD</label>
               <div className="input-group">
-                <span className="input-group-text bg-black border-white border-opacity-10 text-muted">
+                <span className="input-group-text bg-black border-white border-opacity-10 text-muted px-3">
                   <Lock size={18} />
                 </span>
                 <input
                   type="password"
-                  className="form-control bg-black border-white border-opacity-10 text-white font-orbitron px-3 py-3"
-                  style={{ fontSize: '0.8rem' }}
+                  className="form-control bg-black border-white border-opacity-10 text-white font-orbitron py-3 px-4"
+                  style={{ fontSize: '0.9rem', letterSpacing: '1px' }}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="PASSWORD"
+                  placeholder="********"
                   required
                 />
               </div>
             </div>
 
             {error && (
-              <div className="alert bg-danger bg-opacity-10 border border-danger border-opacity-20 text-danger text-center mb-4 py-3 d-flex align-items-center justify-content-center gap-2 font-orbitron" style={{ fontSize: '0.7rem' }}>
-                <ShieldAlert size={16} /> {error}
+              <div className="alert bg-danger bg-opacity-10 border border-danger border-opacity-20 text-danger text-center mb-4 py-3 fw-bold font-orbitron" style={{ fontSize: '0.7rem' }}>
+                {error}
               </div>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary-custom w-100 py-4 rounded-3 mb-4 d-flex align-items-center justify-content-center gap-3 fs-5"
+              className="btn btn-premium w-100 py-4 mb-4"
             >
-              {loading ? (
-                <>
-                  <Loader2 size={24} className="spinner-border spinner-border-sm" /> 
-                  <span className="ms-2">AUTENTICANDO...</span>
-                </>
-              ) : 'INICIAR SESIÓN'}
+              {loading ? <Loader2 size={24} className="spinner-border spinner-border-sm" /> : (
+                <span className="d-flex align-items-center gap-2">
+                   INICIAR SESIÓN <ShieldCheck size={20} />
+                </span>
+              )}
             </button>
           </form>
 
           <button onClick={() => navigate('/')} className="btn btn-link text-muted text-decoration-none w-100 small d-flex align-items-center justify-content-center gap-2 hover-accent transition-all font-orbitron" style={{ fontSize: '0.7rem' }}>
-            <ArrowLeft size={14} /> VOLVER AL PORTAL PÚBLICO
+            <ArrowLeft size={14} /> REGRESAR AL PORTAL PÚBLICO
           </button>
         </div>
-      </div>
-
-      <div className="position-absolute bottom-0 w-100 p-4 text-center opacity-30">
-        <p className="text-white small m-0 font-orbitron" style={{ fontSize: '0.6rem', letterSpacing: '4px' }}>ENCRYPTED END-TO-END • PROTECTED BY ELITE SECURE</p>
-      </div>
+      </motion.div>
     </div>
   );
 };
