@@ -37,6 +37,10 @@
         border: 1px solid #222;
         border-radius: 1rem;
       }
+      .hover-lift:hover {
+        transform: translateY(-5px);
+        transition: transform 0.3s ease;
+      }
       ::-webkit-scrollbar { width: 8px; }
       ::-webkit-scrollbar-track { background: #050505; }
       ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
@@ -45,20 +49,20 @@
 <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/",
+    "bootstrap/": "https://esm.sh/bootstrap@^5.3.8/",
     "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
-    "vite": "https://esm.sh/vite@^7.3.0",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
     "framer-motion": "https://esm.sh/framer-motion@^12.23.26",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
-    "bootstrap/": "https://esm.sh/bootstrap@^5.3.8/"
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react": "https://esm.sh/react@^19.2.3",
+    "vite": "https://esm.sh/vite@^7.3.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
   }
 }
 </script>
 </head>
-<body>
+<body class="antialiased">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
 </body>

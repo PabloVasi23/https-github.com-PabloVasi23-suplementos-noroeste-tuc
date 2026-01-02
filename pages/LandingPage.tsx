@@ -27,8 +27,7 @@ const LandingPage: React.FC = () => {
   }, []);
 
   const openWhatsApp = (comboName?: string) => {
-    // Fix: Accessing environment variables via process.env instead of import.meta.env to resolve TypeScript errors
-    const phone = process.env.VITE_WHATSAPP_NUMBER || config.brand.whatsapp;
+    const phone = (import.meta as any).env.VITE_WHATSAPP_NUMBER || config.brand.whatsapp;
     const message = comboName
       ? `Hola, quiero pedir el Combo ${comboName} que vi en SuplementosNoroesteTuc`
       : `Hola, quiero hacer una consulta desde la web de SuplementosNoroesteTuc`;

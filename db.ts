@@ -66,9 +66,8 @@ export const db = {
     return localStorage.getItem(DB_KEYS.AUTH) === 'true';
   },
   login: (user: string, pass: string) => {
-    // Fix: Accessing environment variables via process.env instead of import.meta.env to resolve TypeScript errors
-    const envUser = process.env.VITE_ADMIN_USER || INITIAL_CONFIG.admin.username;
-    const envPass = process.env.VITE_ADMIN_PASSWORD || INITIAL_CONFIG.admin.password;
+    const envUser = (import.meta as any).env.VITE_ADMIN_USER || INITIAL_CONFIG.admin.username;
+    const envPass = (import.meta as any).env.VITE_ADMIN_PASSWORD || INITIAL_CONFIG.admin.password;
     
     if (user === envUser && pass === envPass) {
       localStorage.setItem(DB_KEYS.AUTH, 'true');

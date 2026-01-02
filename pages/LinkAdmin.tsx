@@ -77,61 +77,60 @@ const LinkAdmin: React.FC = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="py-2">
+        <header className="mb-5 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Links Externos</h1>
-            <p className="text-dark-muted">Conecta tus otras aplicaciones o servicios externos.</p>
+            <h1 className="fw-bold font-orbitron m-0 text-white text-uppercase">Links Externos</h1>
+            <p className="text-secondary m-0">Conecta tus otras aplicaciones o servicios externos.</p>
           </div>
           <button 
             onClick={() => openForm()}
-            className="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-2xl transition-all"
+            className="btn btn-primary-custom px-4 py-3 rounded-3 fw-bold d-flex align-items-center gap-2"
           >
-            <Plus className="w-5 h-5" />
-            Nuevo Link
+            <Plus size={20} /> Nuevo Link
           </button>
-        </div>
+        </header>
 
-        <div className="bg-dark-card border border-dark-border rounded-3xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
+        <div className="card card-dark overflow-hidden border-0 shadow">
+          <div className="table-responsive">
+            <table className="table table-dark table-hover m-0 align-middle">
               <thead>
-                <tr className="border-b border-dark-border bg-white/5">
-                  <th className="px-6 py-4 text-xs font-bold text-dark-muted uppercase tracking-wider">Orden</th>
-                  <th className="px-6 py-4 text-xs font-bold text-dark-muted uppercase tracking-wider">Título</th>
-                  <th className="px-6 py-4 text-xs font-bold text-dark-muted uppercase tracking-wider">URL</th>
-                  <th className="px-6 py-4 text-xs font-bold text-dark-muted uppercase tracking-wider">Estado</th>
-                  <th className="px-6 py-4 text-xs font-bold text-dark-muted uppercase tracking-wider text-right">Acciones</th>
+                <tr>
+                  <th className="px-4 py-3 text-secondary small text-uppercase">Orden</th>
+                  <th className="px-4 py-3 text-secondary small text-uppercase">Título</th>
+                  <th className="px-4 py-3 text-secondary small text-uppercase">URL</th>
+                  <th className="px-4 py-3 text-secondary small text-uppercase">Estado</th>
+                  <th className="px-4 py-3 text-secondary small text-uppercase text-end">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-dark-border">
+              <tbody>
                 {links.map((link, idx) => (
-                  <tr key={link.id} className="hover:bg-white/5 transition-all">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-white font-medium">{link.order}</span>
-                        <div className="flex flex-col">
-                          <button onClick={() => moveOrder(link.id, 'up')} disabled={idx === 0} className="text-dark-muted hover:text-white disabled:opacity-20"><MoveUp className="w-3 h-3" /></button>
-                          <button onClick={() => moveOrder(link.id, 'down')} disabled={idx === links.length - 1} className="text-dark-muted hover:text-white disabled:opacity-20"><MoveDown className="w-3 h-3" /></button>
+                  <tr key={link.id}>
+                    <td className="px-4 py-3">
+                      <div className="d-flex align-items-center gap-2">
+                        <span className="fw-bold text-white">{link.order}</span>
+                        <div className="d-flex flex-column gap-1">
+                          <button onClick={() => moveOrder(link.id, 'up')} disabled={idx === 0} className="btn btn-link p-0 text-secondary border-0"><MoveUp size={14} /></button>
+                          <button onClick={() => moveOrder(link.id, 'down')} disabled={idx === links.length - 1} className="btn btn-link p-0 text-secondary border-0"><MoveDown size={14} /></button>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="font-bold text-white">{link.title}</div>
-                      <div className="text-xs text-dark-muted truncate max-w-xs">{link.description}</div>
+                    <td className="px-4 py-3">
+                      <div className="fw-bold text-white">{link.title}</div>
+                      <div className="text-secondary small truncate" style={{ maxWidth: '200px' }}>{link.description}</div>
                     </td>
-                    <td className="px-6 py-4">
-                      <a href={link.url} target="_blank" className="text-blue-400 text-xs hover:underline truncate max-w-[200px] block">{link.url}</a>
+                    <td className="px-4 py-3">
+                      <a href={link.url} target="_blank" rel="noreferrer" className="text-info small text-decoration-none truncate d-block" style={{ maxWidth: '150px' }}>{link.url}</a>
                     </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${link.active ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
+                    <td className="px-4 py-3">
+                      <span className={`badge rounded-pill ${link.active ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger'}`}>
                         {link.active ? 'Activo' : 'Inactivo'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end gap-2">
-                        <button onClick={() => openForm(link)} className="p-2 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all"><Pencil className="w-4 h-4" /></button>
-                        <button onClick={() => handleDelete(link.id)} className="p-2 bg-red-500/10 text-red-500 hover:bg-red-500/20 rounded-lg transition-all"><Trash2 className="w-4 h-4" /></button>
+                    <td className="px-4 py-3 text-end">
+                      <div className="d-flex justify-content-end gap-2">
+                        <button onClick={() => openForm(link)} className="btn btn-sm btn-dark border-secondary border-opacity-25"><Pencil size={16} /></button>
+                        <button onClick={() => handleDelete(link.id)} className="btn btn-sm btn-outline-danger"><Trash2 size={16} /></button>
                       </div>
                     </td>
                   </tr>
@@ -142,62 +141,37 @@ const LinkAdmin: React.FC = () => {
         </div>
       </div>
 
-      {/* Form Modal */}
+      {/* Editor Modal */}
       {editing && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={closeForm} />
-          <div className="bg-dark-card border border-dark-border w-full max-w-lg rounded-3xl relative z-10 p-8 shadow-2xl">
-            <h2 className="text-2xl font-bold text-white mb-8 font-orbitron">{isNew ? 'Nuevo Link' : 'Editar Link'}</h2>
-            
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-dark-muted">Título</label>
-                <input 
-                  type="text" 
-                  value={editing.title} 
-                  onChange={(e) => setEditing({...editing, title: e.target.value})}
-                  className="w-full bg-black border border-dark-border rounded-xl px-4 py-3 text-white focus:border-blue-500 outline-none transition-all"
-                  placeholder="Nuestra Web de Pádel"
-                />
+        <div className="modal show d-block bg-black bg-opacity-75 z-index-1050 overflow-auto py-5 px-3">
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content card-dark shadow-lg">
+              <div className="modal-header border-secondary border-opacity-25 p-4">
+                <h2 className="modal-title h4 fw-bold font-orbitron text-white">{isNew ? 'NUEVO LINK' : 'EDITAR LINK'}</h2>
+                <button type="button" className="btn-close btn-close-white" onClick={closeForm}></button>
               </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-dark-muted">Descripción</label>
-                <input 
-                  type="text" 
-                  value={editing.description} 
-                  onChange={(e) => setEditing({...editing, description: e.target.value})}
-                  className="w-full bg-black border border-dark-border rounded-xl px-4 py-3 text-white focus:border-blue-500 outline-none transition-all"
-                  placeholder="Breve descripción..."
-                />
+              <div className="modal-body p-4">
+                <div className="mb-3">
+                  <label className="form-label text-secondary small fw-bold">Título</label>
+                  <input type="text" className="form-control bg-black border-secondary border-opacity-25 text-white py-3" value={editing.title} onChange={(e) => setEditing({...editing, title: e.target.value})} />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label text-secondary small fw-bold">Descripción</label>
+                  <input type="text" className="form-control bg-black border-secondary border-opacity-25 text-white py-3" value={editing.description} onChange={(e) => setEditing({...editing, description: e.target.value})} />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label text-secondary small fw-bold">URL</label>
+                  <input type="url" className="form-control bg-black border-secondary border-opacity-25 text-white py-3" value={editing.url} onChange={(e) => setEditing({...editing, url: e.target.value})} />
+                </div>
+                <div className="form-check form-switch mb-3 mt-4">
+                  <input className="form-check-input" type="checkbox" role="switch" id="linkActive" checked={editing.active} onChange={(e) => setEditing({...editing, active: e.target.checked})} />
+                  <label className="form-check-label text-secondary" htmlFor="linkActive">Link Activo</label>
+                </div>
               </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-dark-muted">URL</label>
-                <input 
-                  type="url" 
-                  value={editing.url} 
-                  onChange={(e) => setEditing({...editing, url: e.target.value})}
-                  className="w-full bg-black border border-dark-border rounded-xl px-4 py-3 text-white focus:border-blue-500 outline-none transition-all"
-                  placeholder="https://..."
-                />
-              </div>
-
-              <div className="flex items-center gap-3">
-                <input 
-                  type="checkbox" 
-                  id="link-active"
-                  checked={editing.active} 
-                  onChange={(e) => setEditing({...editing, active: e.target.checked})}
-                  className="w-5 h-5 rounded bg-black border-dark-border text-blue-500 focus:ring-blue-500"
-                />
-                <label htmlFor="link-active" className="text-sm text-gray-300">Link activo</label>
-              </div>
-
-              <div className="pt-8 flex items-center gap-4">
-                <button onClick={closeForm} className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-bold transition-all">Cancelar</button>
-                <button onClick={handleSave} className="flex-1 py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-2xl font-bold transition-all shadow-lg flex items-center justify-center gap-2">
-                  <Save className="w-5 h-5" /> Guardar
+              <div className="modal-footer border-secondary border-opacity-25 p-4">
+                <button type="button" className="btn btn-outline-secondary px-4 py-2" onClick={closeForm}>Cancelar</button>
+                <button type="button" className="btn btn-primary-custom px-5 py-2 d-flex align-items-center gap-2" onClick={handleSave}>
+                  <Save size={18} /> Guardar
                 </button>
               </div>
             </div>
